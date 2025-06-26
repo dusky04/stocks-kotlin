@@ -11,10 +11,13 @@ import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.outlined.FavoriteBorder
 import androidx.compose.material.icons.outlined.Home
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -28,8 +31,9 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
+            val stocksViewModel = ViewModelProvider(this)[StocksViewModel::class.java]
 
-            StocksApp()
+            StocksApp(stocksViewModel)
         }
     }
 }
@@ -51,23 +55,24 @@ enum class Routes(
 }
 
 @Composable
-fun StocksApp() {
+fun StocksApp(stocksViewModel: StocksViewModel) {
     val navController = rememberNavController()
     val startDestination = Routes.HOME
     StocksTheme {
-        Scaffold(
-            modifier = Modifier.fillMaxSize(),
-            bottomBar = { BottomNavBar(navController) }) { innerPadding ->
-            NavHost(
-                navController = navController,
-                startDestination = startDestination.route,
-                modifier = Modifier.padding(innerPadding)
-            ) {
-                Routes.entries.forEach { route ->
-                    composable(route.route) {
-                        when (route) {
-                            Routes.HOME -> HomeScreen()
-                            Routes.WATCH -> WatchListScreen()
+        Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
+            Scaffold(
+                bottomBar = { BottomNavBar(navController) }) { innerPadding ->
+                NavHost(
+                    navController = navController,
+                    startDestination = startDestination.route,
+                    modifier = Modifier.padding(innerPadding)
+                ) {
+                    Routes.entries.forEach { route ->
+                        composable(route.route) {
+                            when (route) {
+                                Routes.HOME -> HomeScreen(stocksViewModel)
+                                Routes.WATCH -> WatchListScreen()
+                            }
                         }
                     }
                 }
@@ -75,7 +80,6 @@ fun StocksApp() {
         }
     }
 }
-
 
 
 
