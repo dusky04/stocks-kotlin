@@ -5,7 +5,9 @@ import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.input.rememberTextFieldState
 import androidx.compose.material.icons.Icons
@@ -27,6 +29,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.tooling.preview.Preview
@@ -102,25 +105,28 @@ fun Search() {
     var expanded by rememberSaveable { mutableStateOf(false) }
 
     val textFieldState = rememberTextFieldState()
-    SearchBar(
-        inputField = {
-            SearchBarDefaults.InputField(
-                query = textFieldState.text.toString(),
-                onQueryChange = { newQuery ->
-                    textFieldState.edit {
-                        replace(0, length, newQuery)
-                    }
-                },
-                onSearch = {
-                    Log.i("SEARCH TRIGGERD", expanded.toString())
-                },
-                expanded = expanded,
-                onExpandedChange = { it -> { expanded = it } },
-                placeholder = { Text("Search") },
-                leadingIcon = { Icon(Icons.Default.Search, null) }
-            )
-        }, expanded = expanded, onExpandedChange = { it -> { expanded = it } }
-    ) { }
+    Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
+        SearchBar(
+            inputField = {
+                SearchBarDefaults.InputField(
+                    query = textFieldState.text.toString(),
+                    onQueryChange = { newQuery ->
+                        textFieldState.edit {
+                            replace(0, length, newQuery)
+                        }
+                    },
+                    onSearch = {
+                        Log.i("SEARCH TRIGGERED", expanded.toString())
+                        expanded = false
+                    },
+                    expanded = expanded,
+                    onExpandedChange = { expanded = it },
+                    placeholder = { Text("Search") },
+                    leadingIcon = { Icon(Icons.Default.Search, null) }
+                )
+            }, expanded = expanded, onExpandedChange = { expanded = it }
+        ) { }
+    }
 }
 
 

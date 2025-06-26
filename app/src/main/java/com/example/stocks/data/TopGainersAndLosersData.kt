@@ -16,7 +16,7 @@ data class MostActivelyTraded(
     val volume: String
 )
 
-data class TopGainer(
+data class TopGainerLoser(
     @SerializedName("change_amount")
     val changeAmount: String,
 
@@ -30,19 +30,19 @@ data class TopGainer(
     val volume: String
 )
 
-data class TopLoser(
-    @SerializedName("change_amount")
-    val changeAmount: String,
-
-    @SerializedName("change_percentage")
-    val changePercentage: String,
-
-    val price: String,
-
-    val ticker: String,
-
-    val volume: String
-)
+//data class TopLoser(
+//    @SerializedName("change_amount")
+//    val changeAmount: String,
+//
+//    @SerializedName("change_percentage")
+//    val changePercentage: String,
+//
+//    val price: String,
+//
+//    val ticker: String,
+//
+//    val volume: String
+//)
 
 data class TopGainersAndLosersData(
     @SerializedName("last_updated")
@@ -54,8 +54,8 @@ data class TopGainersAndLosersData(
     val mostActivelyTraded: List<MostActivelyTraded>?,
 
     @SerializedName("top_gainers")
-    val topGainers: List<TopGainer>?,
+    val topGainers: List<TopGainerLoser>?,
 
     @SerializedName("top_losers")
-    val topLosers: List<TopLoser>?
+    val topLosers: List<TopGainerLoser>?
 )

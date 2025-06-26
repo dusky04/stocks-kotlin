@@ -81,7 +81,7 @@ dependencies {
     // API querying interface
     implementation(libs.retrofit)
     implementation(libs.converter.gson)
-
+    implementation(libs.okhttp)
+    implementation(libs.logging.interceptor)
     implementation(libs.androidx.runtime.livedata)
-
 }
