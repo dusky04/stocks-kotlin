@@ -46,16 +46,16 @@ data class TopLoser(
 
 data class TopGainersAndLosersData(
     @SerializedName("last_updated")
-    val lastUpdated: String,
+    val lastUpdated: String?,
 
-    val metadata: String,
+    val metadata: String?,
 
     @SerializedName("most_actively_traded")
-    val mostActivelyTraded: List<MostActivelyTraded>,
+    val mostActivelyTraded: List<MostActivelyTraded>?,
 
     @SerializedName("top_gainers")
-    val topGainers: List<TopGainer>,
+    val topGainers: List<TopGainer>?,
 
     @SerializedName("top_losers")
-    val topLosers: List<TopLoser>
+    val topLosers: List<TopLoser>?
 )

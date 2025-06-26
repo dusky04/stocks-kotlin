@@ -4,6 +4,10 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.stocks.api.FetcherInstance
+import com.example.stocks.data.TopGainersAndLosersData
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
 
@@ -11,25 +15,36 @@ class StocksViewModel : ViewModel() {
     private val apiInstance = FetcherInstance.stocksAPI
 
     fun searchTicker(ticker: String) {
-        Log.i("Ticker Name: ", ticker)
         viewModelScope.launch {
             val response =
                 apiInstance.getSearchTickerResults("SYMBOL_SEARCH", ticker, BuildConfig.API_KEY)
             if (response.isSuccessful) {
-                Log.i("Response: ", response.body().toString())
+                response.body()?.let { data ->
+
+                }
             } else {
-                Log.i("Error: ", response.message())
             }
         }
     }
 
-    // TODO: Change this function name
-    fun getTopData() {
+    private val _topLosersAndGainers = MutableStateFlow<TopGainersAndLosersData>(
+        TopGainersAndLosersData(
+            null,
+            null,
+            null,
+            null,
+            null
+        )
+    )
+    val topLosersAndGainers: StateFlow<TopGainersAndLosersData> = _topLosersAndGainers.asStateFlow()
+    fun getTopGainersAndLosers() {
         viewModelScope.launch {
             val response =
                 apiInstance.getTopGainersAndLosers("TOP_GAINERS_LOSERS", BuildConfig.API_KEY)
             if (response.isSuccessful) {
-                Log.i("Response: ", response.body().toString())
+                response.body()?.let { data ->
+                    _topLosersAndGainers.value = data
+                }
             } else {
                 Log.i("Error: ", response.message())
             }
