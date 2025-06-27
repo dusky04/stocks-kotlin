@@ -33,16 +33,15 @@ import com.example.stocks.ui.theme.sansFontFamily
 fun StockCard(cardInfo: TopGainerLoser, isGainer: Boolean) {
     val navController = LocalNavController.current
     Card(
-        colors = CardDefaults.cardColors(containerColor = Color.White),
         modifier = Modifier
             .fillMaxWidth()
             .padding(4.dp),
         shape = RoundedCornerShape(8.dp),
+        colors = CardDefaults.cardColors(containerColor = Color.White),
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
         onClick = {
             navController.navigate("overview/${cardInfo.ticker}/${cardInfo.price}/${cardInfo.changeAmount}/${cardInfo.changePercentage}")
-        }
-    ) {
+        }) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -53,7 +52,7 @@ fun StockCard(cardInfo: TopGainerLoser, isGainer: Boolean) {
 
             Row(
                 verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(10.dp)
+                horizontalArrangement = Arrangement.spacedBy(6.dp)
             ) {
                 Box(
                     modifier = Modifier
@@ -66,27 +65,23 @@ fun StockCard(cardInfo: TopGainerLoser, isGainer: Boolean) {
                         imageVector = if (isGainer) TrendingUpIcon else TrendingDownIcon,
                         contentDescription = null,
                         tint = if (isGainer) Color(0xFF4CAF50) else Color(0xFFF44336),
-                        modifier = Modifier
-                            .size(24.dp)
+                        modifier = Modifier.size(24.dp)
                     )
                 }
                 Column {
                     Text(
                         text = cardInfo.ticker,
                         style = MaterialTheme.typography.bodyLarge.copy(
-                            fontWeight = FontWeight.SemiBold,
-                            fontSize = 16.sp
+                            fontWeight = FontWeight.SemiBold, fontSize = 14.sp
                         ),
-                        fontFamily = sansFontFamily,
-                        color = Color.Black
+                        fontFamily = sansFontFamily
                     )
                     Text(
                         text = "$%.2f".format(cardInfo.price.toFloat()),
                         style = MaterialTheme.typography.bodyLarge.copy(
-                            fontSize = 14.sp
+                            fontSize = 12.sp
                         ),
                         fontFamily = sansFontFamily,
-                        color = Color.Black
                     )
                 }
             }
@@ -96,16 +91,15 @@ fun StockCard(cardInfo: TopGainerLoser, isGainer: Boolean) {
                 Text(
                     text = "+%.2f".format(cardInfo.changePercentage.dropLast(1).toFloat()) + "%",
                     style = MaterialTheme.typography.bodySmall.copy(
-                        fontWeight = FontWeight.Medium,
-                        fontSize = 14.sp
+                        fontWeight = FontWeight.Medium, fontSize = 12.sp
                     ),
                     fontFamily = sansFontFamily,
                     color = if (isGainer) Color(0xFF4CAF50) else Color(0xFFF44336)
                 )
                 Text(
-                    text = "+" + cardInfo.changeAmount,
+                    text = "+" + "%.2f".format(cardInfo.changeAmount.toFloat()),
                     style = MaterialTheme.typography.bodyMedium.copy(
-                        fontSize = 14.sp
+                        fontSize = 12.sp
                     ),
                     fontFamily = sansFontFamily,
                     color = if (isGainer) Color(0xFF4CAF50) else Color(0xFFF44336)
