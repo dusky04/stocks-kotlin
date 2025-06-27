@@ -43,7 +43,7 @@ fun StockCard(cardInfo: TopGainerLoser, isGainer: Boolean) {
         shape = RoundedCornerShape(16.dp),
         elevation = CardDefaults.elevatedCardElevation(defaultElevation = 4.dp),
         onClick = {
-            navController.navigate("overview/${cardInfo.ticker}")
+            navController.navigate("overview/${cardInfo.ticker}/${cardInfo.price}/${cardInfo.changeAmount}/${cardInfo.changePercentage}")
         }
     ) {
         Column(

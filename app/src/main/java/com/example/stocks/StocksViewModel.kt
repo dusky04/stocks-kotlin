@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.stocks.api.FetcherInstance
+import com.example.stocks.data.CompanyOverviewData
 import com.example.stocks.data.TopGainerLoser
 import com.example.stocks.data.TopGainersAndLosersData
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -42,9 +43,7 @@ class StocksViewModel : ViewModel() {
         viewModelScope.launch {
             val response =
                 apiInstance.getTopGainersAndLosers("TOP_GAINERS_LOSERS", BuildConfig.API_KEY)
-            Log.i("API KEY: ", BuildConfig.API_KEY)
             if (response.isSuccessful) {
-                Log.i("BODY: ", response.message())
                 response.body()?.let { data ->
                     _topLosersAndGainers.value = data
                     _topGainers.value = data.topGainers ?: emptyList()
@@ -56,15 +55,75 @@ class StocksViewModel : ViewModel() {
         }
     }
 
-    fun getCompanyOverviewData(companyName: String) {
+    private val _companyOverviewData = MutableStateFlow<CompanyOverviewData>(
+        CompanyOverviewData(
+            address = null,
+            analystRatingBuy = null,
+            analystRatingHold = null,
+            analystRatingSell = null,
+            analystRatingStrongBuy = null,
+            analystRatingStrongSell = null,
+            analystTargetPrice = null,
+            assetType = null,
+            beta = null,
+            bookValue = null,
+            cIK = null,
+            country = null,
+            currency = null,
+            dayMovingAverage50 = null,
+            dayMovingAverage200 = null,
+            description = null,
+            dilutedEPSTTM = null,
+            dividendDate = null,
+            dividendPerShare = null,
+            dividendYield = null,
+            eBITDA = null,
+            ePS = null,
+            eVToEBITDA = null,
+            eVToRevenue = null,
+            exDividendDate = null,
+            exchange = null,
+            fiscalYearEnd = null,
+            forwardPE = null,
+            grossProfitTTM = null,
+            industry = null,
+            latestQuarter = null,
+            marketCapitalization = null,
+            name = null,
+            officialSite = null,
+            operatingMarginTTM = null,
+            pEGRatio = null,
+            pERatio = null,
+            priceToBookRatio = null,
+            priceToSalesRatioTTM = null,
+            profitMargin = null,
+            quarterlyEarningsGrowthYOY = null,
+            quarterlyRevenueGrowthYOY = null,
+            returnOnAssetsTTM = null,
+            returnOnEquityTTM = null,
+            revenuePerShareTTM = null,
+            revenueTTM = null,
+            sector = null,
+            sharesOutstanding = null,
+            symbol = null,
+            trailingPE = null,
+            weekHigh = null,
+            weekLow = null
+        )
+    )
+    val companyOverviewData: StateFlow<CompanyOverviewData> = _companyOverviewData.asStateFlow()
+    fun getCompanyOverviewData(ticker: String) {
         viewModelScope.launch {
             val response = apiInstance.getCompanyOverview(
-                "OVERVIEW", companyName, BuildConfig.API_KEY
+                "OVERVIEW", ticker, BuildConfig.API_KEY
             )
             if (response.isSuccessful) {
+                response.body()?.let { data ->
+                    _companyOverviewData.value = data
+                }
                 Log.i("Response: ", response.body().toString())
             } else {
-                Log.i("Error: ", response.message())
+                Log.i("ERROR: In getCompanyOverviewData() ", response.message())
             }
         }
     }

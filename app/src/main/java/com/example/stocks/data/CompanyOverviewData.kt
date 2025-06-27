@@ -4,158 +4,158 @@ import com.google.gson.annotations.SerializedName
 
 data class CompanyOverviewData(
     @SerializedName("Address")
-    val address: String,
+    val address: String?,
 
     @SerializedName("AnalystRatingBuy")
-    val analystRatingBuy: String,
+    val analystRatingBuy: String?,
 
     @SerializedName("AnalystRatingHold")
-    val analystRatingHold: String,
+    val analystRatingHold: String?,
 
     @SerializedName("AnalystRatingSell")
-    val analystRatingSell: String,
+    val analystRatingSell: String?,
 
     @SerializedName("AnalystRatingStrongBuy")
-    val analystRatingStrongBuy: String,
+    val analystRatingStrongBuy: String?,
 
     @SerializedName("AnalystRatingStrongSell")
-    val analystRatingStrongSell: String,
+    val analystRatingStrongSell: String?,
 
     @SerializedName("AnalystTargetPrice")
-    val analystTargetPrice: String,
+    val analystTargetPrice: String?,
 
     @SerializedName("AssetType")
-    val assetType: String,
+    val assetType: String?,
 
     @SerializedName("Beta")
-    val beta: String,
+    val beta: String?,
 
     @SerializedName("BookValue")
-    val bookValue: String,
+    val bookValue: String?,
 
     @SerializedName("CIK")
-    val cIK: String,
+    val cIK: String?,
 
     @SerializedName("Country")
-    val country: String,
+    val country: String?,
 
     @SerializedName("Currency")
-    val currency: String,
+    val currency: String?,
 
     @SerializedName("50DayMovingAverage")
-    val dayMovingAverage50: String,
+    val dayMovingAverage50: String?,
 
     @SerializedName("200DayMovingAverage")
-    val dayMovingAverage200: String,
+    val dayMovingAverage200: String?,
 
     @SerializedName("Description")
-    val description: String,
+    val description: String?,
 
     @SerializedName("DilutedEPSTTM")
-    val dilutedEPSTTM: String,
+    val dilutedEPSTTM: String?,
 
     @SerializedName("DividendDate")
-    val dividendDate: String,
+    val dividendDate: String?,
 
     @SerializedName("DividendPerShare")
-    val dividendPerShare: String,
+    val dividendPerShare: String?,
 
     @SerializedName("DividendYield")
-    val dividendYield: String,
+    val dividendYield: String?,
 
     @SerializedName("EBITDA")
-    val eBITDA: String,
+    val eBITDA: String?,
 
     @SerializedName("EPS")
-    val ePS: String,
+    val ePS: String?,
 
     @SerializedName("EVToEBITDA")
-    val eVToEBITDA: String,
+    val eVToEBITDA: String?,
 
     @SerializedName("EVToRevenue")
-    val eVToRevenue: String,
+    val eVToRevenue: String?,
 
     @SerializedName("ExDividendDate")
-    val exDividendDate: String,
+    val exDividendDate: String?,
 
     @SerializedName("Exchange")
-    val exchange: String,
+    val exchange: String?,
 
     @SerializedName("FiscalYearEnd")
-    val fiscalYearEnd: String,
+    val fiscalYearEnd: String?,
 
     @SerializedName("ForwardPE")
-    val forwardPE: String,
+    val forwardPE: String?,
 
     @SerializedName("GrossProfitTTM")
-    val grossProfitTTM: String,
+    val grossProfitTTM: String?,
 
     @SerializedName("Industry")
-    val industry: String,
+    val industry: String?,
 
     @SerializedName("LatestQuarter")
-    val latestQuarter: String,
+    val latestQuarter: String?,
 
     @SerializedName("MarketCapitalization")
-    val marketCapitalization: String,
+    val marketCapitalization: String?,
 
     @SerializedName("Name")
-    val name: String,
+    val name: String?,
 
     @SerializedName("OfficialSite")
-    val officialSite: String,
+    val officialSite: String?,
 
     @SerializedName("OperatingMarginTTM")
-    val operatingMarginTTM: String,
+    val operatingMarginTTM: String?,
 
     @SerializedName("PEGRatio")
-    val pEGRatio: String,
+    val pEGRatio: String?,
 
     @SerializedName("PERatio")
-    val pERatio: String,
+    val pERatio: String?,
 
     @SerializedName("PriceToBookRatio")
-    val priceToBookRatio: String,
+    val priceToBookRatio: String?,
 
     @SerializedName("PriceToSalesRatioTTM")
-    val priceToSalesRatioTTM: String,
+    val priceToSalesRatioTTM: String?,
 
     @SerializedName("ProfitMargin")
-    val profitMargin: String,
+    val profitMargin: String?,
 
     @SerializedName("QuarterlyEarningsGrowthYOY")
-    val quarterlyEarningsGrowthYOY: String,
+    val quarterlyEarningsGrowthYOY: String?,
 
     @SerializedName("QuarterlyRevenueGrowthYOY")
-    val quarterlyRevenueGrowthYOY: String,
+    val quarterlyRevenueGrowthYOY: String?,
 
     @SerializedName("ReturnOnAssetsTTM")
-    val returnOnAssetsTTM: String,
+    val returnOnAssetsTTM: String?,
 
     @SerializedName("ReturnOnEquityTTM")
-    val returnOnEquityTTM: String,
+    val returnOnEquityTTM: String?,
 
     @SerializedName("RevenuePerShareTTM")
-    val revenuePerShareTTM: String,
+    val revenuePerShareTTM: String?,
 
     @SerializedName("RevenueTTM")
-    val revenueTTM: String,
+    val revenueTTM: String?,
 
     @SerializedName("Sector")
-    val sector: String,
+    val sector: String?,
 
     @SerializedName("SharesOutstanding")
-    val sharesOutstanding: String,
+    val sharesOutstanding: String?,
 
     @SerializedName("Symbol")
-    val symbol: String,
+    val symbol: String?,
 
     @SerializedName("TrailingPE")
-    val trailingPE: String,
+    val trailingPE: String?,
 
     @SerializedName("52WeekHigh")
-    val weekHigh: String,
+    val weekHigh: String?,
 
     @SerializedName("52WeekLow")
-    val weekLow: String
+    val weekLow: String?
 )

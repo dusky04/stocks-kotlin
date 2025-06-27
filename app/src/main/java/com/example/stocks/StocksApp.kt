@@ -1,9 +1,9 @@
 package com.example.stocks
 
+import android.util.Log
 import androidx.compose.animation.AnimatedContentTransitionScope
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.layout.windowInsetsPadding
@@ -38,14 +38,27 @@ sealed interface Destination {
         override val route: String = "watch"
     }
 
-    data class Overview(val ticker: String) : Destination {
-        override val route: String = "overview/{ticker}"
+    data class Overview(
+        val ticker: String,
+        val price: String,
+        val changeAmount: String,
+        val changePercentage: String,
+    ) : Destination {
+        override val route: String = "overview/{ticker}/{price}/{changeAmount}/{changePercentage}"
 
-        fun routeWithArgs(): String = "overview/$ticker"
+        fun routeWithArgs(): String = "overview/$ticker/$price/$changeAmount/$changePercentage"
 
         companion object {
-            val tickerArg = "ticker"
-            val arguments = listOf(navArgument(tickerArg) { type = NavType.StringType })
+            const val TICKER_ARG = "ticker"
+            const val PRICE_ARG = "price"
+            const val CHANGE_AMOUNT_ARG = "changeAmount"
+            const val CHANGE_PERCENTAGE_ARG = "changePercentage"
+            val arguments = listOf(
+                navArgument(TICKER_ARG) { type = NavType.StringType },
+                navArgument(PRICE_ARG) { type = NavType.StringType },
+                navArgument(CHANGE_AMOUNT_ARG) { type = NavType.StringType },
+                navArgument(CHANGE_PERCENTAGE_ARG) { type = NavType.StringType }
+            )
         }
     }
 }
@@ -65,7 +78,6 @@ fun StocksApp(stocksViewModel: StocksViewModel) {
                 color = MaterialTheme.colorScheme.background
             ) {
                 Scaffold(
-//                    topBar = { if (showTopBar) Search() },
                     bottomBar = { BottomNavBar() }) { innerPadding ->
                     NavHost(
                         navController = navController,
@@ -75,7 +87,7 @@ fun StocksApp(stocksViewModel: StocksViewModel) {
                         composable(Destination.Home.route, exitTransition = {
                             slideOutOfContainer(
                                 AnimatedContentTransitionScope.SlideDirection.Left,
-                                tween(400)
+//                                tween(400)
                             )
                         }) {
                             HomeScreen(stocksViewModel)
@@ -84,15 +96,14 @@ fun StocksApp(stocksViewModel: StocksViewModel) {
                             WatchListScreen()
                         }
                         composable(
-                            Destination.Overview("").route,
+                            Destination.Overview("", "", "", "").route,
                             Destination.Overview.arguments,
                             enterTransition = {
                                 slideIntoContainer(
                                     AnimatedContentTransitionScope.SlideDirection.Left,
-                                    tween(400)
+//                                    tween(400)
                                 )
                             },
-//                            popExitTransition = ,
                             popExitTransition = {
                                 slideOutOfContainer(
                                     AnimatedContentTransitionScope.SlideDirection.Right,
@@ -101,11 +112,29 @@ fun StocksApp(stocksViewModel: StocksViewModel) {
                             }
 
                         ) { backStackEntry ->
-                            val ticker =
-                                backStackEntry.arguments?.getString(Destination.Overview.tickerArg)
-                            if (ticker != null) {
-                                OverviewScreen(ticker)
+                            val args = backStackEntry.arguments
+                            val ticker = args?.getString(Destination.Overview.TICKER_ARG)
+                            val price = args?.getString(Destination.Overview.PRICE_ARG)
+                            val changeAmount =
+                                args?.getString(Destination.Overview.CHANGE_AMOUNT_ARG)
+                            val changePercentage =
+                                args?.getString(Destination.Overview.CHANGE_PERCENTAGE_ARG)
 
+                            if (ticker != null && price != null && changeAmount != null && changePercentage != null) {
+                                OverviewScreen(
+                                    stocksViewModel,
+                                    ticker,
+                                    price,
+                                    changeAmount,
+                                    changePercentage
+                                )
+                            } else {
+                                // Handle the case where arguments are missing, e.g., show an error or pop back.
+                                // For now, we can just log it.
+                                Log.e(
+                                    "NavigationError",
+                                    "OverviewScreen received incomplete arguments."
+                                )
                             }
                         }
                     }

@@ -103,9 +103,7 @@ fun HomeScreen(
     }
 
     Column(modifier = Modifier.fillMaxWidth()) {
-
         Search()
-
         Carousel("Top Gainers", topGainers, true)
         Carousel("Top Losers", topLosers, false)
     }
