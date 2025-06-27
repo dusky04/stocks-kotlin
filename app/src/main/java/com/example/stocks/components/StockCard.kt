@@ -40,7 +40,8 @@ fun StockCard(cardInfo: TopGainerLoser, isGainer: Boolean) {
         colors = CardDefaults.cardColors(containerColor = Color.White),
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
         onClick = {
-            navController.navigate("overview/${cardInfo.ticker}/${cardInfo.price}/${cardInfo.changeAmount}/${cardInfo.changePercentage}")
+//            navController.navigate("overview/${cardInfo.ticker}/${cardInfo.price}/${cardInfo.changeAmount}/${cardInfo.changePercentage}")
+            navController.navigate("overview/${cardInfo.ticker}")
         }) {
         Row(
             modifier = Modifier

@@ -27,7 +27,6 @@ fun Carousel(sectionTitle: String, itemsList: List<TopGainerLoser>, isGainer: Bo
     Column(
         modifier = Modifier
             .fillMaxWidth(),
-//        verticalArrangement = Arrangement.spacedBy(10.dp)
     ) {
         Row(
             modifier = Modifier.fillMaxWidth().padding(12.dp),

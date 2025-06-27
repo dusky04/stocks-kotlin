@@ -45,20 +45,14 @@ sealed interface Destination {
         val changeAmount: String,
         val changePercentage: String,
     ) : Destination {
-        override val route: String = "overview/{ticker}/{price}/{changeAmount}/{changePercentage}"
+        override val route: String = "overview/{ticker}"
 
-        fun routeWithArgs(): String = "overview/$ticker/$price/$changeAmount/$changePercentage"
+        fun routeWithArgs(): String = "overview/$ticker"
 
         companion object {
             const val TICKER_ARG = "ticker"
-            const val PRICE_ARG = "price"
-            const val CHANGE_AMOUNT_ARG = "changeAmount"
-            const val CHANGE_PERCENTAGE_ARG = "changePercentage"
             val arguments = listOf(
                 navArgument(TICKER_ARG) { type = NavType.StringType },
-                navArgument(PRICE_ARG) { type = NavType.StringType },
-                navArgument(CHANGE_AMOUNT_ARG) { type = NavType.StringType },
-                navArgument(CHANGE_PERCENTAGE_ARG) { type = NavType.StringType }
             )
         }
     }
@@ -131,23 +125,12 @@ fun StocksApp(stocksViewModel: StocksViewModel) {
                         ) { backStackEntry ->
                             val args = backStackEntry.arguments
                             val ticker = args?.getString(Destination.Overview.TICKER_ARG)
-                            val price = args?.getString(Destination.Overview.PRICE_ARG)
-                            val changeAmount =
-                                args?.getString(Destination.Overview.CHANGE_AMOUNT_ARG)
-                            val changePercentage =
-                                args?.getString(Destination.Overview.CHANGE_PERCENTAGE_ARG)
-
-                            if (ticker != null && price != null && changeAmount != null && changePercentage != null) {
+                            if (ticker != null) {
                                 OverviewScreen(
                                     stocksViewModel,
                                     ticker,
-                                    price,
-                                    changeAmount,
-                                    changePercentage
                                 )
                             } else {
-                                // Handle the case where arguments are missing, e.g., show an error or pop back.
-                                // For now, we can just log it.
                                 Log.e(
                                     "NavigationError",
                                     "OverviewScreen received incomplete arguments."

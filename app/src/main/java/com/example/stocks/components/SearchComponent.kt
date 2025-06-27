@@ -22,6 +22,7 @@ import androidx.compose.material3.SearchBar
 import androidx.compose.material3.SearchBarDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -32,13 +33,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.stocks.LocalNavController
 import com.example.stocks.StocksViewModel
 import com.example.stocks.data.TickerSearchResult
 import com.example.stocks.ui.theme.sansFontFamily
-
-// The 'StockResult' data class was removed as it was unused.
-// The composables use 'TickerSearchResult' which is assumed to be defined in your data layer.
-// data class TickerSearchResult(val symbol: String?, val name: String?, val currency: String?)
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -46,6 +44,16 @@ fun StockSearch(viewModel: StocksViewModel) {
     var expanded by rememberSaveable { mutableStateOf(false) }
     val textFieldState = rememberTextFieldState()
     val tickerSearchResults by viewModel.tickerSearchResults.collectAsState()
+    var searchQuery by rememberSaveable { mutableStateOf("") }
+    val navController = LocalNavController.current
+
+    // Add a basic debounce so that we do not bombard the server on every query press
+    LaunchedEffect(searchQuery) {
+        kotlinx.coroutines.delay(5000)
+        if (searchQuery.isNotBlank()) {
+            viewModel.searchTicker(searchQuery)
+        }
+    }
 
     Box(
         modifier = Modifier.fillMaxWidth(),
@@ -59,10 +67,7 @@ fun StockSearch(viewModel: StocksViewModel) {
                         textFieldState.edit {
                             replace(0, length, newQuery)
                         }
-                        // Only search if the query is not blank
-                        if (newQuery.isNotBlank()) {
-                            viewModel.searchTicker(newQuery)
-                        }
+                        searchQuery = newQuery
                     },
                     onSearch = {
                         expanded = false
@@ -76,7 +81,6 @@ fun StockSearch(viewModel: StocksViewModel) {
             expanded = expanded,
             onExpandedChange = { expanded = it }
         ) {
-            // Use .let for safer handling of nullable list
             tickerSearchResults.bestMatches?.let { results ->
                 if (results.isNotEmpty()) {
                     LazyColumn {
@@ -85,14 +89,13 @@ fun StockSearch(viewModel: StocksViewModel) {
                                 stock = stock,
                                 onStockClick = { selectedStock ->
                                     expanded = false
-                                    textFieldState.edit {
-                                        replace(0, length, selectedStock.name ?: "")
-                                    }
+                                    navController.navigate("overview/${stock.symbol}")
+
                                 }
                             )
                         }
                     }
-                }else{
+                } else {
                     CircularProgressIndicator()
                 }
             }
@@ -113,11 +116,9 @@ fun StockResultItem(
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
-        // This column contains the stock's name, symbol, and currency.
         Column(
             modifier = Modifier.weight(1f)
         ) {
-            // Ensure properties are not null before displaying
             Text(
                 text = stock.name ?: "N/A",
                 fontSize = 16.sp,
@@ -131,7 +132,5 @@ fun StockResultItem(
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
         }
-        // Removed the second Column with hardcoded price and empty Row,
-        // as this information is not available in the 'TickerSearchResult' data.
     }
 }

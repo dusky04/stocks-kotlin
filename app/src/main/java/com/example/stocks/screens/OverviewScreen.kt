@@ -1,6 +1,7 @@
 package com.example.stocks.screens
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -9,14 +10,13 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -25,45 +25,63 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.stocks.LocalNavController
 import com.example.stocks.StocksViewModel
-import com.example.stocks.assets.BookmarkIcon
-import com.example.stocks.assets.TrendingUpIcon
+import com.example.stocks.ui.theme.backgroundColors
 import com.example.stocks.ui.theme.sansFontFamily
+
+// FIXME: Can't really show change amount or market status from this endpoint!
+
+@Composable
+fun PillShapedBox(text: String) {
+    Box(
+        modifier = Modifier
+            .border(
+                width = 1.dp,
+                color = Color(0xFFDADCE0), // light gray border color
+                shape = RoundedCornerShape(24.dp)
+            )
+            .background(
+                color = Color(0xFFF1F3F4),
+                shape = RoundedCornerShape(24.dp)
+            )
+    ) {
+        Text(
+            text = text,
+            fontFamily = sansFontFamily,
+            modifier = Modifier.padding(horizontal = 12.dp, vertical = 2.dp),
+            fontWeight = FontWeight.Medium
+        )
+    }
+}
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun OverviewScreen(
     viewModel: StocksViewModel,
     ticker: String,
-    price: String,
-    changeAmount: String,
-    changePercentage: String,
 ) {
+    val companyOverviewData by viewModel.companyOverviewData.collectAsState()
     LaunchedEffect(true) {
-        // viewModel.getCompanyOverviewData(ticker)
+        // Get the company data through ticker name
+        viewModel.getCompanyOverviewData(ticker)
     }
+
     val navController = LocalNavController.current
-    val ticker = "IBM"
-    val companyName = "International Business Machines"
-    val currentPrice = "291.16" // Calculated from market cap and shares outstanding
-    val changeAmount = "+2.84"
-    val changePercentage = "+0.99%"
-    val isPositive = true
-    val changeColor = if (isPositive) Color(0xFF00C853) else Color(0xFFD32F2F)
 
     Scaffold(
         topBar = {
@@ -75,7 +93,8 @@ fun OverviewScreen(
                 }, navigationIcon = {
                     IconButton(onClick = { navController.popBackStack() }) {
                         Icon(
-                            imageVector = Icons.Default.ArrowBack, contentDescription = "Back"
+                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                            contentDescription = "Back"
                         )
                     }
                 }, colors = TopAppBarDefaults.topAppBarColors(
@@ -88,127 +107,53 @@ fun OverviewScreen(
                 .padding(innerPadding)
                 .fillMaxWidth()
                 .padding(horizontal = 16.dp)
-                .verticalScroll(rememberScrollState())
+                .verticalScroll(rememberScrollState()),
+            verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
-            Spacer(modifier = Modifier.height(16.dp))
-
-            // Main Stock Card
             Card(
                 modifier = Modifier.fillMaxWidth(),
                 shape = RoundedCornerShape(20.dp),
-                colors = CardDefaults.cardColors(
-                    containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.7f)
-                ),
             ) {
-                Box(
+                Column(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .background(
-                            brush = Brush.linearGradient(
-                                colors = listOf(
-                                    MaterialTheme.colorScheme.secondaryContainer.copy(alpha = 1f),
-                                    MaterialTheme.colorScheme.surface
-                                )
-                            )
-                        )
+                        .background(backgroundColors[0])
+                        .padding(24.dp)
                 ) {
-                    Column(
-                        modifier = Modifier
-                            .padding(24.dp)
-                            .fillMaxWidth()
-                    ) {
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.SpaceBetween,
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            Column(modifier = Modifier.weight(1f)) {
-                                Text(
-                                    text = ticker,
-                                    style = MaterialTheme.typography.labelLarge,
-                                    color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f),
-                                    letterSpacing = 1.2.sp
-                                )
-                                Spacer(modifier = Modifier.height(4.dp))
-                                Text(
-                                    text = companyName,
-                                    style = MaterialTheme.typography.headlineSmall,
-                                    fontWeight = FontWeight.Bold,
-                                    color = MaterialTheme.colorScheme.onSurface
-                                )
-                            }
-
-                            Surface(
-                                shape = CircleShape,
-                                color = MaterialTheme.colorScheme.primary.copy(alpha = 0.1f),
-                                modifier = Modifier.size(48.dp)
-                            ) {
-                                Box(
-                                    contentAlignment = Alignment.Center,
-                                    modifier = Modifier.size(48.dp)
-                                ) {
-                                    Icon(
-                                        imageVector = BookmarkIcon,
-                                        contentDescription = "Bookmark",
-                                        tint = MaterialTheme.colorScheme.primary,
-                                        modifier = Modifier.size(24.dp)
-                                    )
-                                }
-                            }
-                        }
-
-                        Spacer(modifier = Modifier.height(24.dp))
-
-                        Row(
-                            modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.Bottom
-                        ) {
-                            Text(
-                                text = "$$currentPrice",
-                                style = MaterialTheme.typography.displaySmall,
-                                fontWeight = FontWeight.Bold,
-                                color = MaterialTheme.colorScheme.onSurface
-                            )
-
-                            Spacer(modifier = Modifier.width(12.dp))
-
-                            Surface(
-                                shape = RoundedCornerShape(12.dp),
-                                color = changeColor.copy(alpha = 0.1f),
-                                modifier = Modifier.padding(bottom = 4.dp)
-                            ) {
-                                Row(
-                                    modifier = Modifier.padding(
-                                        horizontal = 12.dp, vertical = 6.dp
-                                    ), verticalAlignment = Alignment.CenterVertically
-                                ) {
-                                    Icon(
-                                        imageVector = TrendingUpIcon,
-                                        contentDescription = "Trend",
-                                        tint = changeColor,
-                                        modifier = Modifier.size(16.dp)
-                                    )
-                                    Spacer(modifier = Modifier.width(4.dp))
-                                    Text(
-                                        text = changeAmount,
-                                        style = MaterialTheme.typography.bodyLarge,
-                                        fontWeight = FontWeight.SemiBold,
-                                        color = changeColor
-                                    )
-                                }
-                            }
-                        }
-
-                        Spacer(modifier = Modifier.height(8.dp))
-
-                        Text(
-                            text = changePercentage,
-                            style = MaterialTheme.typography.bodyMedium,
-                            color = changeColor,
-                            fontWeight = FontWeight.Medium
-                        )
-                    }
+                    Text(
+                        text = ticker,
+                        style = MaterialTheme.typography.labelLarge,
+                        fontFamily = sansFontFamily,
+                        letterSpacing = 1.2.sp, color = Color.White
+                    )
+                    Spacer(modifier = Modifier.height(4.dp))
+                    Text(
+                        text = companyOverviewData.name ?: "",
+                        style = MaterialTheme.typography.headlineSmall,
+                        fontWeight = FontWeight.Bold,
+                        fontFamily = sansFontFamily,
+                        color = Color.White,
+                    )
                 }
             }
+
+            LazyRow(
+                horizontalArrangement = Arrangement.spacedBy(4.dp),
+                modifier = Modifier
+                    .fillMaxWidth()
+            ) {
+                items(
+                    listOf(
+                        companyOverviewData.exchange ?: "",
+                        companyOverviewData.sector ?: "",
+                        companyOverviewData.industry ?: ""
+                    )
+                ) { label ->
+                    PillShapedBox(label)
+                }
+            }
+
+
 
             Spacer(modifier = Modifier.height(24.dp))
 
