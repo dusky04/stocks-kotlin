@@ -8,11 +8,11 @@ import androidx.compose.ui.graphics.vector.path
 import androidx.compose.ui.unit.dp
 
 
-val Bookmark: ImageVector
+val BookmarkIcon: ImageVector
     get() {
-        if (_Bookmark != null) return _Bookmark!!
+        if (_BookmarkIcon != null) return _BookmarkIcon!!
 
-        _Bookmark = ImageVector.Builder(
+        _BookmarkIcon = ImageVector.Builder(
             name = "Bookmark",
             defaultWidth = 24.dp,
             defaultHeight = 24.dp,
@@ -44,9 +44,9 @@ val Bookmark: ImageVector
             }
         }.build()
 
-        return _Bookmark!!
+        return _BookmarkIcon!!
     }
 
-private var _Bookmark: ImageVector? = null
+private var _BookmarkIcon: ImageVector? = null
 
 

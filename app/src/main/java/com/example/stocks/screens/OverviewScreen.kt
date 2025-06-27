@@ -11,7 +11,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -41,7 +40,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.stocks.LocalNavController
 import com.example.stocks.StocksViewModel
-import com.example.stocks.assets.Bookmark
+import com.example.stocks.assets.BookmarkIcon
 import com.example.stocks.assets.TrendingUpIcon
 import com.example.stocks.ui.theme.sansFontFamily
 
@@ -149,7 +148,7 @@ fun OverviewScreen(
                                     modifier = Modifier.size(48.dp)
                                 ) {
                                     Icon(
-                                        imageVector = Bookmark,
+                                        imageVector = BookmarkIcon,
                                         contentDescription = "Bookmark",
                                         tint = MaterialTheme.colorScheme.primary,
                                         modifier = Modifier.size(24.dp)

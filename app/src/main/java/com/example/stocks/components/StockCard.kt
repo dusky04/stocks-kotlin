@@ -81,7 +81,7 @@ fun StockCard(cardInfo: TopGainerLoser, isGainer: Boolean) {
                         color = Color.Black
                     )
                     Text(
-                        text = "%.2f".format(cardInfo.price.toFloat()),
+                        text = "$%.2f".format(cardInfo.price.toFloat()),
                         style = MaterialTheme.typography.bodyLarge.copy(
                             fontSize = 14.sp
                         ),
@@ -90,8 +90,6 @@ fun StockCard(cardInfo: TopGainerLoser, isGainer: Boolean) {
                     )
                 }
             }
-
-            // Right side - Price and percentage change
             Column(
                 horizontalAlignment = Alignment.End
             ) {

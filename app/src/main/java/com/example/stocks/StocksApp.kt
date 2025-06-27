@@ -23,6 +23,7 @@ import androidx.navigation.navArgument
 import com.example.stocks.components.BottomNavBar
 import com.example.stocks.screens.HomeScreen
 import com.example.stocks.screens.OverviewScreen
+import com.example.stocks.screens.TopListScreen
 import com.example.stocks.screens.WatchListScreen
 import com.example.stocks.ui.theme.StocksTheme
 
@@ -60,6 +61,22 @@ sealed interface Destination {
                 navArgument(CHANGE_PERCENTAGE_ARG) { type = NavType.StringType }
             )
         }
+    }
+
+    data class TopList(
+        val kind: Boolean
+    ) : Destination {
+        override val route: String = "toplist/{kind}"
+
+        fun routeWithArgs(): String = "overview/$kind"
+
+        companion object {
+            const val KIND = "kind"
+            val arguments = listOf(
+                navArgument(KIND) { type = NavType.BoolType }
+            )
+        }
+
     }
 }
 
@@ -135,6 +152,16 @@ fun StocksApp(stocksViewModel: StocksViewModel) {
                                     "NavigationError",
                                     "OverviewScreen received incomplete arguments."
                                 )
+                            }
+                        }
+                        composable(
+                            Destination.TopList(true).route,
+                            Destination.TopList.arguments
+                        ) { backStackEntry ->
+                            val kind =
+                                backStackEntry.arguments?.getBoolean(Destination.TopList.KIND)
+                            if (kind != null) {
+                                TopListScreen(stocksViewModel, kind)
                             }
                         }
                     }
