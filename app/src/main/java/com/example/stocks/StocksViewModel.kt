@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.stocks.api.FetcherInstance
 import com.example.stocks.data.CompanyOverviewData
+import com.example.stocks.data.TickerSearchData
 import com.example.stocks.data.TopGainerLoser
 import com.example.stocks.data.TopGainersAndLosersData
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -12,19 +13,26 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
+// TODO: Handle exception when the network request fails
 
 class StocksViewModel : ViewModel() {
     private val apiInstance = FetcherInstance.stocksAPI
 
+
+    private val _tickerSearchResults =
+        MutableStateFlow<TickerSearchData>(TickerSearchData(emptyList()))
+    val tickerSearchResults: StateFlow<TickerSearchData> = _tickerSearchResults.asStateFlow()
     fun searchTicker(ticker: String) {
         viewModelScope.launch {
             val response =
                 apiInstance.getSearchTickerResults("SYMBOL_SEARCH", ticker, BuildConfig.API_KEY)
             if (response.isSuccessful) {
+                Log.i("SEARCH REPOSNE", response.body().toString())
                 response.body()?.let { data ->
-
+                    _tickerSearchResults.value = data
                 }
             } else {
+                Log.i("ERROR: In searchTicker() ", response.message())
             }
         }
     }

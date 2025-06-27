@@ -6,34 +6,35 @@ import com.google.gson.annotations.SerializedName
 // API Response JSON mapped to a Kotlin Class
 
 data class TickerSearchData(
-    @SerializedName("bestMatches") val bestMatches: List<TickerSearchResult>
+    @SerializedName("bestMatches")
+    val bestMatches: List<TickerSearchResult>?
 )
 
 data class TickerSearchResult(
     @SerializedName("1. symbol")
-    val symbol: String,
+    val symbol: String?,
 
     @SerializedName("2. name")
-    val name: String,
+    val name: String?,
 
     @SerializedName("3. type")
-    val type: String,
+    val type: String?,
 
     @SerializedName("4. region")
-    val region: String,
+    val region: String?,
 
     @SerializedName("5. marketOpen")
-    val marketOpen: String,
+    val marketOpen: String?,
 
     @SerializedName("6. marketClose")
-    val marketClose: String,
+    val marketClose: String?,
 
     @SerializedName("7. timezone")
-    val timezone: String,
+    val timezone: String?,
 
     @SerializedName("8. currency")
-    val currency: String,
+    val currency: String?,
 
     @SerializedName("9. matchScore")
-    val matchScore: String
+    val matchScore: String?
 )
