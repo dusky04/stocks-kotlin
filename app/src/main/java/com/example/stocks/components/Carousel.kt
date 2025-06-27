@@ -13,14 +13,21 @@ import androidx.compose.material3.carousel.rememberCarouselState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clipToBounds
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.example.stocks.data.TopGainerLoser
+import com.example.stocks.ui.theme.sansFontFamily
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun Carousel(sectionTitle: String, itemsList: List<TopGainerLoser>, isGainer: Boolean) {
     Column(modifier = Modifier.padding(12.dp)) {
-        Text(sectionTitle, style = MaterialTheme.typography.titleLarge)
+        Text(
+            sectionTitle,
+            fontFamily = sansFontFamily,
+            fontWeight = FontWeight.Bold,
+            style = MaterialTheme.typography.titleLarge
+        )
         if (itemsList.isNotEmpty()) {
             HorizontalUncontainedCarousel(
                 itemWidth = 170.dp,

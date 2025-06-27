@@ -84,4 +84,7 @@ dependencies {
     implementation(libs.okhttp)
     implementation(libs.logging.interceptor)
     implementation(libs.androidx.runtime.livedata)
+
+    // Charting Library
+    implementation(libs.mpandroidchart)
 }
