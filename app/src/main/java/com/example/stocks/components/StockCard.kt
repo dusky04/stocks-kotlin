@@ -25,6 +25,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import com.example.stocks.LocalNavController
 import com.example.stocks.assets.TrendingDownIcon
 import com.example.stocks.assets.TrendingUpIcon
 import com.example.stocks.data.TopGainerLoser
@@ -32,6 +33,7 @@ import com.example.stocks.data.TopGainerLoser
 
 @Composable
 fun StockCard(cardInfo: TopGainerLoser, isGainer: Boolean) {
+    val navController = LocalNavController.current
     ElevatedCard(
         colors = CardDefaults.cardColors(containerColor = Color.White),
         modifier = Modifier
@@ -39,7 +41,10 @@ fun StockCard(cardInfo: TopGainerLoser, isGainer: Boolean) {
             .width(170.dp)
             .height(130.dp),
         shape = RoundedCornerShape(16.dp),
-        elevation = CardDefaults.elevatedCardElevation(defaultElevation = 4.dp)
+        elevation = CardDefaults.elevatedCardElevation(defaultElevation = 4.dp),
+        onClick = {
+            navController.navigate("overview/${cardInfo.ticker}")
+        }
     ) {
         Column(
             modifier = Modifier

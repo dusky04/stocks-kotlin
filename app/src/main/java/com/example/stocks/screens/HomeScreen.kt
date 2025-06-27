@@ -2,48 +2,13 @@ package com.example.stocks.screens
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.wrapContentHeight
-import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
-import androidx.compose.material3.carousel.HorizontalUncontainedCarousel
-import androidx.compose.material3.carousel.rememberCarouselState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clipToBounds
-import androidx.compose.ui.unit.dp
 import com.example.stocks.StocksViewModel
-import com.example.stocks.components.StockCard
+import com.example.stocks.components.Carousel
+import com.example.stocks.components.Search
 import com.example.stocks.data.TopGainerLoser
-
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun Carousel(sectionTitle: String, itemsList: List<TopGainerLoser>, isGainer: Boolean) {
-    Column(modifier = Modifier.padding(12.dp)) {
-        Text(sectionTitle, style = MaterialTheme.typography.titleLarge)
-        if (itemsList.isNotEmpty()) {
-            HorizontalUncontainedCarousel(
-                itemWidth = 170.dp,
-                itemSpacing = 4.dp,
-                state = rememberCarouselState { itemsList.count() },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .wrapContentHeight()
-                    .clipToBounds(),
-            ) { idx ->
-                val item = itemsList[idx]
-                StockCard(item, isGainer)
-
-            }
-        } else {
-            CircularProgressIndicator()
-        }
-    }
-}
 
 
 val topGainers = listOf(
@@ -123,7 +88,11 @@ val topLosers = listOf(
 )
 
 @Composable
-fun HomeScreen(viewModel: StocksViewModel, modifier: Modifier = Modifier) {
+fun HomeScreen(
+    viewModel: StocksViewModel,
+    modifier: Modifier = Modifier,
+//    navController: NavHostController
+) {
     // all state variables
 //    val topGainers by viewModel.topGainers.collectAsState()
 //    val topLosers by viewModel.topLosers.collectAsState()
@@ -134,6 +103,9 @@ fun HomeScreen(viewModel: StocksViewModel, modifier: Modifier = Modifier) {
     }
 
     Column(modifier = Modifier.fillMaxWidth()) {
+
+        Search()
+
         Carousel("Top Gainers", topGainers, true)
         Carousel("Top Losers", topLosers, false)
     }
