@@ -13,6 +13,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.text.input.rememberTextFieldState
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -75,7 +76,15 @@ fun StockSearch(viewModel: StocksViewModel) {
                     expanded = expanded,
                     onExpandedChange = { expanded = it },
                     placeholder = { Text("Search stocks", fontFamily = sansFontFamily) },
-                    leadingIcon = { Icon(Icons.Default.Search, contentDescription = "Search icon") }
+                    leadingIcon = {
+                        if (expanded) Icon(
+                            Icons.Default.Search,
+                            contentDescription = null
+                        ) else Icon(
+                            Icons.AutoMirrored.Filled.ArrowBack,
+                            contentDescription = null
+                        )
+                    }
                 )
             },
             expanded = expanded,

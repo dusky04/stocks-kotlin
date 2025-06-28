@@ -17,10 +17,9 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -30,6 +29,7 @@ import com.example.stocks.LocalNavController
 import com.example.stocks.StocksViewModel
 import com.example.stocks.assets.TrendingDownIcon
 import com.example.stocks.assets.TrendingUpIcon
+import com.example.stocks.components.TopNavBar
 import com.example.stocks.data.TopGainerLoser
 import com.example.stocks.ui.theme.backgroundColors
 import com.example.stocks.ui.theme.sansFontFamily
@@ -38,8 +38,8 @@ import com.example.stocks.ui.theme.sansFontFamily
 @Composable
 fun TopListScreen(viewModel: StocksViewModel, kind: Boolean) {
     // State Varibles
-    val topGainers by viewModel.topGainers.collectAsState()
-    val topLosers by viewModel.topLosers.collectAsState()
+//    val topGainers by viewModel.topGainers.collectAsState()
+//    val topLosers by viewModel.topLosers.collectAsState()
 
     val stocksToShow = if (kind) topGainers else topLosers
     val title = if (kind) "Top Gainers" else "Top Losers"
@@ -103,26 +103,18 @@ fun StockIndicesTable(
     title: String = "Top Gainers", stocks: List<TopGainerLoser>
 ) {
 
-    Column {
-        Text(
-            text = title,
-            style = MaterialTheme.typography.headlineSmall,
-            fontFamily = sansFontFamily,
-            fontWeight = FontWeight.Medium,
-            color = Color(0xFF374151),
-            modifier = Modifier.padding(16.dp)
-        )
-
-        TableHeader()
-
-        LazyColumn(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp)
-        ) {
-            itemsIndexed(stocks) { idx, stock ->
-                val backgroundColor = backgroundColors[idx % backgroundColors.size]
-                StockItem(stock = stock, backgroundColor)
+    Scaffold(topBar = { TopNavBar(title) }) { innerPadding ->
+        Column(modifier = Modifier.padding(innerPadding)) {
+            TableHeader()
+            LazyColumn(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp)
+            ) {
+                itemsIndexed(stocks) { idx, stock ->
+                    val backgroundColor = backgroundColors[idx % backgroundColors.size]
+                    StockItem(stock = stock, backgroundColor)
+                }
             }
         }
     }
@@ -137,7 +129,6 @@ fun StockItem(stock: TopGainerLoser, backgroundColor: Color) {
             .fillMaxWidth()
             .padding(vertical = 8.dp)
             .clickable(onClick = {
-//                navController.navigate("overview/${stock.ticker}/${stock.price}/${stock.changeAmount}/${stock.changePercentage}")
                 navController.navigate("overview/${stock.ticker}")
             }),
         verticalAlignment = Alignment.CenterVertically,

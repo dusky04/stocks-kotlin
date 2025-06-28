@@ -2,6 +2,7 @@ package com.example.stocks.data
 
 import com.google.gson.annotations.SerializedName
 
+
 data class CompanyOverviewData(
     @SerializedName("Address")
     val address: String?,
