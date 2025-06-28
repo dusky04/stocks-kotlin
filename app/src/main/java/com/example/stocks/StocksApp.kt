@@ -47,8 +47,6 @@ sealed interface Destination {
     ) : Destination {
         override val route: String = "overview/{ticker}"
 
-        fun routeWithArgs(): String = "overview/$ticker"
-
         companion object {
             const val TICKER_ARG = "ticker"
             val arguments = listOf(
@@ -62,15 +60,12 @@ sealed interface Destination {
     ) : Destination {
         override val route: String = "toplist/{kind}"
 
-        fun routeWithArgs(): String = "overview/$kind"
-
         companion object {
             const val KIND = "kind"
             val arguments = listOf(
                 navArgument(KIND) { type = NavType.BoolType }
             )
         }
-
     }
 }
 
@@ -104,7 +99,7 @@ fun StocksApp(stocksViewModel: StocksViewModel) {
                             HomeScreen(stocksViewModel)
                         }
                         composable(Destination.WatchList.route) {
-                            WatchListScreen()
+                            WatchListScreen(stocksViewModel)
                         }
                         composable(
                             Destination.Overview("", "", "", "").route,
