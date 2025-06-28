@@ -9,14 +9,13 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.SheetState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -24,15 +23,28 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.stocks.data.CompanyOverviewData
 import com.example.stocks.ui.theme.sansFontFamily
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun BottomSheet(
-    onDismiss: () -> Unit, sheetState: SheetState
+    onDismiss: () -> Unit,
+    sheetState: SheetState,
+    stock: CompanyOverviewData,
+    availableWatchLists: List<Int>,
+    onSave: (CompanyOverviewData, List<Int>) -> Unit
 ) {
     var text by remember { mutableStateOf("") }
-    var check by remember { mutableStateOf(false) }
+    val checkedStates = remember(availableWatchLists) {
+        mutableStateMapOf<Int, Boolean>().apply {
+            availableWatchLists.forEach { idx ->
+                put(idx, false)
+            }
+        }
+    }
+
+
     ModalBottomSheet(
         onDismissRequest = { onDismiss() }, sheetState = sheetState
     ) {
@@ -47,28 +59,43 @@ fun BottomSheet(
                 horizontalArrangement = Arrangement.spacedBy(4.dp)
             ) {
                 OutlinedTextField(
-                    value = text,
-                    modifier = Modifier.weight(1f),
-                    onValueChange = {
+                    value = text, modifier = Modifier.weight(1f), onValueChange = {
                         text = it
-                    },
-                    label = {
+                    }, label = {
                         Text("New Watchlist", fontFamily = sansFontFamily)
-                    },
-                    shape = RoundedCornerShape(12.dp)
+                    }, shape = RoundedCornerShape(12.dp)
                 )
                 Button(onClick = {}) { Text("Add", fontFamily = sansFontFamily) }
             }
 
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                Checkbox(checked = check, onCheckedChange = {
-                    check = !check
-                })
-                Text(
-                    text = "Watchlist 1",
-                    fontFamily = sansFontFamily,
-                    fontSize = 18.sp
-                )
+            availableWatchLists.forEach { watchListIdx ->
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Checkbox(
+                        checked = checkedStates[watchListIdx] ?: false,
+                        onCheckedChange = { isChecked ->
+                            checkedStates[watchListIdx] = isChecked
+                        })
+                    Text(
+                        text = "Watchlist ${watchListIdx + 1}",
+                        fontFamily = sansFontFamily,
+                        fontSize = 18.sp
+                    )
+                }
+            }
+
+            Button(
+                onClick = {
+                    val selected = checkedStates.filter { it.value }.keys.toList()
+                    if (selected.isNotEmpty()) {
+                        onSave(stock, selected)
+                    }
+                },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = 16.dp),
+                shape = RoundedCornerShape(12.dp)
+            ) {
+                Text("Save to Watch Lists", fontSize = 16.sp)
             }
         }
     }

@@ -29,19 +29,16 @@ import com.example.stocks.ui.theme.sansFontFamily
 
 
 enum class TabRoutes(val label: String) {
-    WATCH_ONE("Watchlist 1"),
-    WATCH_TWO("Watchlist 2")
+    WATCH_ONE("Watchlist 1"), WATCH_TWO("Watchlist 2")
 }
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun WatchListScreen(viewModel: StocksViewModel) { // Accept the ViewModel
-    // navController is no longer needed here for tab switching
+fun WatchListScreen(viewModel: StocksViewModel) {
     val startDestination = TabRoutes.WATCH_ONE
     var selectedDestination by rememberSaveable { mutableIntStateOf(startDestination.ordinal) }
 
-    // Use a Column to place the TabRow above the content
     Column(modifier = Modifier.fillMaxSize()) {
         TopAppBar(
             title = {
@@ -51,11 +48,9 @@ fun WatchListScreen(viewModel: StocksViewModel) { // Accept the ViewModel
                     fontFamily = sansFontFamily,
                     modifier = Modifier.fillMaxWidth()
                 )
-            },
-            colors = TopAppBarDefaults.topAppBarColors(
+            }, colors = TopAppBarDefaults.topAppBarColors(
                 containerColor = MaterialTheme.colorScheme.surface
-            ),
-            modifier = Modifier.windowInsetsPadding(WindowInsets.statusBars)
+            ), modifier = Modifier.windowInsetsPadding(WindowInsets.statusBars)
         )
 
         ScrollableTabRow(
@@ -64,21 +59,17 @@ fun WatchListScreen(viewModel: StocksViewModel) { // Accept the ViewModel
             edgePadding = 0.dp,
         ) {
             TabRoutes.entries.forEachIndexed { idx, tabRoute ->
-                Tab(
-                    selected = (selectedDestination == idx),
-                    onClick = {
-                        // Just update the state. No navigation needed.
-                        selectedDestination = idx
-                    },
-                    text = {
-                        Text(
-                            text = tabRoute.label,
-                            maxLines = 1,
-                            overflow = TextOverflow.Ellipsis,
-                            fontFamily = sansFontFamily
-                        )
-                    }
-                )
+                Tab(selected = (selectedDestination == idx), onClick = {
+                    // Just update the state. No navigation needed.
+                    selectedDestination = idx
+                }, text = {
+                    Text(
+                        text = tabRoute.label,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis,
+                        fontFamily = sansFontFamily
+                    )
+                })
             }
         }
 

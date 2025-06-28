@@ -137,6 +137,25 @@ class StocksViewModel : ViewModel() {
     }
 
 
+    private val _watchLists = MutableStateFlow<Map<Int, MutableSet<CompanyOverviewData>>>(
+        mapOf(
+            0 to hashSetOf(),
+            1 to hashSetOf()
+        )
+    )
+    val watchLists: StateFlow<Map<Int, MutableSet<CompanyOverviewData>>> = _watchLists.asStateFlow()
+    fun addStockToWatchLists(stock: CompanyOverviewData, selectedWatchLists: List<Int>) {
+        viewModelScope.launch {
+            val currentWatchLists = _watchLists.value.toMutableMap()
+            selectedWatchLists.forEach { watchListIdx ->
+                val currentList =
+                    currentWatchLists[watchListIdx]?.toMutableSet() ?: mutableSetOf()
+                currentList.add(stock)
+                currentWatchLists[watchListIdx] = currentList
+            }
+            _watchLists.value = currentWatchLists
+            Log.i("VIEWMODEL", "Updated watchlists: ${_watchLists.value}")
+        }
 
-
+    }
 }

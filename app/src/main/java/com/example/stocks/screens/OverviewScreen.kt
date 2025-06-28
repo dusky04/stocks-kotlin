@@ -28,6 +28,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -133,6 +134,8 @@ fun OverviewScreen(
     ticker: String,
 ) {
 //    val companyOverviewData by viewModel.companyOverviewData.collectAsState()
+    val watchlists by viewModel.watchLists.collectAsState()
+
     LaunchedEffect(true) {
         // Get the company data through ticker name
 //        viewModel.getCompanyOverviewData(ticker)
@@ -292,7 +295,13 @@ fun OverviewScreen(
         if (showBottomSheet) {
             BottomSheet(
                 onDismiss = { showBottomSheet = false },
-                sheetState = sheetState
+                sheetState = sheetState,
+                stock = companyOverviewData,
+                availableWatchLists = watchlists.keys.toList(),
+                onSave = { stockTicker, selectedLists ->
+                    viewModel.addStockToWatchLists(companyOverviewData, selectedLists)
+                    showBottomSheet = false
+                }
             )
         }
     }
