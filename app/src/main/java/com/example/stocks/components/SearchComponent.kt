@@ -50,7 +50,7 @@ fun StockSearch(viewModel: StocksViewModel) {
 
     // Add a basic debounce so that we do not bombard the server on every query press
     LaunchedEffect(searchQuery) {
-        kotlinx.coroutines.delay(5000)
+        kotlinx.coroutines.delay(500)
         if (searchQuery.isNotBlank()) {
             viewModel.searchTicker(searchQuery)
         }

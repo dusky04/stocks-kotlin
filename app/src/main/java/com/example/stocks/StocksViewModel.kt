@@ -137,24 +137,39 @@ class StocksViewModel : ViewModel() {
     }
 
 
-    private val _watchLists = MutableStateFlow<Map<Int, MutableSet<CompanyOverviewData>>>(
+    private val _watchLists = MutableStateFlow<Map<String, MutableSet<CompanyOverviewData>>>(
         mapOf(
-            0 to hashSetOf(),
-            1 to hashSetOf()
+            "WatchList 1" to mutableSetOf(),
+            "WatchList 2" to mutableSetOf()
         )
     )
-    val watchLists: StateFlow<Map<Int, MutableSet<CompanyOverviewData>>> = _watchLists.asStateFlow()
-    fun addStockToWatchLists(stock: CompanyOverviewData, selectedWatchLists: List<Int>) {
+    val watchLists: StateFlow<Map<String, MutableSet<CompanyOverviewData>>> =
+        _watchLists.asStateFlow()
+
+    // TODO: Perform this function on a background thread
+    fun addNewWatchList(newWatchListName: String): Boolean {
+        val currentWatchLists = _watchLists.value.toMutableMap()
+        if (currentWatchLists.containsKey(newWatchListName)) {
+            Log.w("VIEWMODEL", "Watchlist with name '$newWatchListName' already exists.")
+            return false
+        }
+        currentWatchLists.put(newWatchListName, mutableSetOf())
+        _watchLists.value = currentWatchLists
+        Log.i("VIEWMODEL", "Successfully added new watchlist: $newWatchListName")
+        return true
+    }
+
+    fun addStockToWatchLists(stock: CompanyOverviewData, selectedWatchLists: List<String>) {
         viewModelScope.launch {
             val currentWatchLists = _watchLists.value.toMutableMap()
-            selectedWatchLists.forEach { watchListIdx ->
+            selectedWatchLists.forEach { watchListName ->
                 val currentList =
-                    currentWatchLists[watchListIdx]?.toMutableSet() ?: mutableSetOf()
+                    currentWatchLists[watchListName]?.toMutableSet() ?: mutableSetOf()
                 currentList.add(stock)
-                currentWatchLists[watchListIdx] = currentList
+                currentWatchLists[watchListName] = currentList
             }
             _watchLists.value = currentWatchLists
-            Log.i("VIEWMODEL", "Updated watchlists: ${_watchLists.value}")
+            Log.i("VIEWMODEL", "Updated watchLists: ${_watchLists.value}")
         }
 
     }

@@ -40,7 +40,6 @@ fun StockCard(cardInfo: TopGainerLoser, isGainer: Boolean) {
         colors = CardDefaults.cardColors(containerColor = Color.White),
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
         onClick = {
-//            navController.navigate("overview/${cardInfo.ticker}/${cardInfo.price}/${cardInfo.changeAmount}/${cardInfo.changePercentage}")
             navController.navigate("overview/${cardInfo.ticker}")
         }) {
         Row(
@@ -72,7 +71,7 @@ fun StockCard(cardInfo: TopGainerLoser, isGainer: Boolean) {
                     Text(
                         text = cardInfo.ticker,
                         style = MaterialTheme.typography.bodyLarge.copy(
-                            fontWeight = FontWeight.SemiBold, fontSize = 14.sp
+                            fontWeight = FontWeight.SemiBold, fontSize = 12.sp
                         ),
                         fontFamily = sansFontFamily
                     )
@@ -89,7 +88,7 @@ fun StockCard(cardInfo: TopGainerLoser, isGainer: Boolean) {
                 horizontalAlignment = Alignment.End
             ) {
                 Text(
-                    text = "+%.2f".format(cardInfo.changePercentage.dropLast(1).toFloat()) + "%",
+                    text = "%.2f".format(cardInfo.changePercentage.dropLast(1).toFloat()) + "%",
                     style = MaterialTheme.typography.bodySmall.copy(
                         fontWeight = FontWeight.Medium, fontSize = 12.sp
                     ),
@@ -97,7 +96,7 @@ fun StockCard(cardInfo: TopGainerLoser, isGainer: Boolean) {
                     color = if (isGainer) Color(0xFF4CAF50) else Color(0xFFF44336)
                 )
                 Text(
-                    text = "+" + "%.2f".format(cardInfo.changeAmount.toFloat()),
+                    text = "%.2f".format(cardInfo.changeAmount.toFloat()),
                     style = MaterialTheme.typography.bodyMedium.copy(
                         fontSize = 12.sp
                     ),

@@ -29,12 +29,9 @@ import com.example.stocks.data.CompanyOverviewData
 import com.example.stocks.ui.theme.sansFontFamily
 
 @Composable
-fun WatchListTabScreen(viewModel: StocksViewModel, idx: Int) {
-    // 1. Collect the state from the ViewModel
+fun WatchListTabScreen(viewModel: StocksViewModel, watchListName: String) {
     val watchLists by viewModel.watchLists.collectAsState()
-
-    // 2. Get the specific list of stocks for the current tab index
-    val stocksForThisWatchlist = watchLists[idx]?.toList() ?: emptyList()
+    val stocksForThisWatchlist = watchLists[watchListName]?.toList() ?: emptyList()
 
     if (stocksForThisWatchlist.isEmpty()) {
         Box(
@@ -50,7 +47,6 @@ fun WatchListTabScreen(viewModel: StocksViewModel, idx: Int) {
             )
         }
     } else {
-        // 3. Display the stocks in a LazyColumn
         LazyColumn(
             modifier = Modifier
                 .fillMaxSize()

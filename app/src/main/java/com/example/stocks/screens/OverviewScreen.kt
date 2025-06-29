@@ -134,13 +134,12 @@ fun OverviewScreen(
     ticker: String,
 ) {
 //    val companyOverviewData by viewModel.companyOverviewData.collectAsState()
-    val watchlists by viewModel.watchLists.collectAsState()
+    val watchLists by viewModel.watchLists.collectAsState()
 
     LaunchedEffect(true) {
         // Get the company data through ticker name
 //        viewModel.getCompanyOverviewData(ticker)
     }
-    val scope = rememberCoroutineScope()
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = false)
     var showBottomSheet by remember { mutableStateOf(false) }
 
@@ -297,7 +296,8 @@ fun OverviewScreen(
                 onDismiss = { showBottomSheet = false },
                 sheetState = sheetState,
                 stock = companyOverviewData,
-                availableWatchLists = watchlists.keys.toList(),
+                availableWatchLists = watchLists.keys.toList(),
+                viewModel = viewModel,
                 onSave = { stockTicker, selectedLists ->
                     viewModel.addStockToWatchLists(companyOverviewData, selectedLists)
                     showBottomSheet = false

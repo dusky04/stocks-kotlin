@@ -14,6 +14,7 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.SheetState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.mutableStateOf
@@ -23,6 +24,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.stocks.StocksViewModel
 import com.example.stocks.data.CompanyOverviewData
 import com.example.stocks.ui.theme.sansFontFamily
 
@@ -31,18 +33,21 @@ import com.example.stocks.ui.theme.sansFontFamily
 fun BottomSheet(
     onDismiss: () -> Unit,
     sheetState: SheetState,
+    viewModel: StocksViewModel,
     stock: CompanyOverviewData,
-    availableWatchLists: List<Int>,
-    onSave: (CompanyOverviewData, List<Int>) -> Unit
+    availableWatchLists: List<String>,
+    onSave: (CompanyOverviewData, List<String>) -> Unit
 ) {
     var text by remember { mutableStateOf("") }
     val checkedStates = remember(availableWatchLists) {
-        mutableStateMapOf<Int, Boolean>().apply {
+        mutableStateMapOf<String, Boolean>().apply {
             availableWatchLists.forEach { idx ->
                 put(idx, false)
             }
         }
     }
+
+    val watchLists by viewModel.watchLists.collectAsState()
 
 
     ModalBottomSheet(
@@ -65,18 +70,21 @@ fun BottomSheet(
                         Text("New Watchlist", fontFamily = sansFontFamily)
                     }, shape = RoundedCornerShape(12.dp)
                 )
-                Button(onClick = {}) { Text("Add", fontFamily = sansFontFamily) }
+                Button(onClick = {
+                    viewModel.addNewWatchList(text)
+                    text = ""
+                }) { Text("Add", fontFamily = sansFontFamily) }
             }
 
-            availableWatchLists.forEach { watchListIdx ->
+            availableWatchLists.forEach { watchListName ->
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Checkbox(
-                        checked = checkedStates[watchListIdx] ?: false,
+                        checked = checkedStates[watchListName] ?: false,
                         onCheckedChange = { isChecked ->
-                            checkedStates[watchListIdx] = isChecked
+                            checkedStates[watchListName] = isChecked
                         })
                     Text(
-                        text = "Watchlist ${watchListIdx + 1}",
+                        text = watchListName,
                         fontFamily = sansFontFamily,
                         fontSize = 18.sp
                     )

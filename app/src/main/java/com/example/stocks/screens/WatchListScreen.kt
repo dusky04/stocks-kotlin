@@ -16,6 +16,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -28,16 +29,12 @@ import com.example.stocks.StocksViewModel
 import com.example.stocks.ui.theme.sansFontFamily
 
 
-enum class TabRoutes(val label: String) {
-    WATCH_ONE("Watchlist 1"), WATCH_TWO("Watchlist 2")
-}
-
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun WatchListScreen(viewModel: StocksViewModel) {
-    val startDestination = TabRoutes.WATCH_ONE
-    var selectedDestination by rememberSaveable { mutableIntStateOf(startDestination.ordinal) }
+    val watchLists by viewModel.watchLists.collectAsState()
+    val availableWatchLists = watchLists.keys.toList()
+    var selectedTabIndex by rememberSaveable { mutableIntStateOf(0) }
 
     Column(modifier = Modifier.fillMaxSize()) {
         TopAppBar(
@@ -54,17 +51,16 @@ fun WatchListScreen(viewModel: StocksViewModel) {
         )
 
         ScrollableTabRow(
-            selectedTabIndex = selectedDestination,
+            selectedTabIndex = selectedTabIndex,
             modifier = Modifier.fillMaxWidth(),
             edgePadding = 0.dp,
         ) {
-            TabRoutes.entries.forEachIndexed { idx, tabRoute ->
-                Tab(selected = (selectedDestination == idx), onClick = {
-                    // Just update the state. No navigation needed.
-                    selectedDestination = idx
+            availableWatchLists.forEachIndexed { idx, tabRoute ->
+                Tab(selected = (selectedTabIndex == idx), onClick = {
+                    selectedTabIndex = idx
                 }, text = {
                     Text(
-                        text = tabRoute.label,
+                        text = tabRoute,
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis,
                         fontFamily = sansFontFamily
@@ -73,7 +69,9 @@ fun WatchListScreen(viewModel: StocksViewModel) {
             }
         }
 
-        // Display the content for the currently selected tab
-        WatchListTabScreen(viewModel = viewModel, idx = selectedDestination)
+        val selectedWatchListName = availableWatchLists.getOrNull(selectedTabIndex)
+        if (selectedWatchListName != null) {
+            WatchListTabScreen(viewModel = viewModel, watchListName = selectedWatchListName)
+        }
     }
 }
