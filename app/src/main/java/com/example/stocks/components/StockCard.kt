@@ -1,6 +1,7 @@
 package com.example.stocks.components
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -32,12 +33,18 @@ import com.example.stocks.ui.theme.sansFontFamily
 @Composable
 fun StockCard(cardInfo: TopGainerLoser, isGainer: Boolean) {
     val navController = LocalNavController.current
+    val iconColor = if (isGainer) Color(0xFF4CAF50) else Color(0xFFF44336)
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(4.dp),
+            .padding(4.dp)
+            .border(
+                width = 1.dp,
+                color = MaterialTheme.colorScheme.outlineVariant,
+                shape = RoundedCornerShape(8.dp)
+            ),
         shape = RoundedCornerShape(8.dp),
-        colors = CardDefaults.cardColors(containerColor = Color.White),
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
         onClick = {
             navController.navigate("overview/${cardInfo.ticker}")
@@ -85,26 +92,20 @@ fun StockCard(cardInfo: TopGainerLoser, isGainer: Boolean) {
             Column(
                 horizontalAlignment = Alignment.End
             ) {
-                Text(
-                    text =
-                        cardInfo.changePercentage?.dropLast(1)?.toFloatOrNull()?.let {
-                            "%.2f".format(it) + "%"
-                        } ?: "N/A",
+                Text(text = cardInfo.changePercentage?.dropLast(1)?.toFloatOrNull()?.let {
+                    "%.2f".format(it) + "%"
+                } ?: "N/A",
                     style = MaterialTheme.typography.bodySmall.copy(
                         fontWeight = FontWeight.Medium, fontSize = 12.sp
                     ),
                     fontFamily = sansFontFamily,
-                    color = if (isGainer) Color(0xFF4CAF50) else Color(0xFFF44336)
-                )
+                    color = iconColor)
                 Text(
-                    text = cardInfo.changeAmount?.toFloatOrNull()?.let { "$%.2f".format(it) }
-                        ?: "N/A",
-                    style = MaterialTheme.typography.bodyMedium.copy(
-                        fontSize = 12.sp
-                    ),
-                    fontFamily = sansFontFamily,
-                    color = if (isGainer) Color(0xFF4CAF50) else Color(0xFFF44336)
-                )
+                    text =
+                    cardInfo.changeAmount?.toFloatOrNull()?.let { "$%.2f".format(it) }
+                        ?: "N/A", style = MaterialTheme.typography.bodyMedium.copy(
+                    fontSize = 12.sp
+                ), fontFamily = sansFontFamily, color = iconColor)
             }
         }
     }

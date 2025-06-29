@@ -29,7 +29,7 @@ fun Carousel(sectionTitle: String, itemsList: List<TopGainerLoser>, isGainer: Bo
         Row(
             modifier = Modifier
                 .fillMaxWidth(),
-                    horizontalArrangement = Arrangement . SpaceBetween,
+            horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(

@@ -9,10 +9,8 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import com.example.stocks.ui.theme.sansFontFamily
 
 @Composable
 fun PillShapedBox(text: String) {
@@ -20,11 +18,11 @@ fun PillShapedBox(text: String) {
         modifier = Modifier
             .border(
                 width = 1.dp,
-                color = Color(0xFFDADCE0), // light gray border color
+                color = MaterialTheme.colorScheme.outlineVariant,
                 shape = RoundedCornerShape(24.dp)
             )
             .background(
-                color = Color(0xFFF1F3F4),
+                color = MaterialTheme.colorScheme.surfaceVariant,
                 shape = RoundedCornerShape(24.dp)
             )
     ) {
@@ -33,7 +31,7 @@ fun PillShapedBox(text: String) {
 //            fontFamily = sansFontFamily,
             modifier = Modifier.padding(horizontal = 12.dp, vertical = 2.dp),
             style = MaterialTheme.typography.bodySmall,
-            color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5f),
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
             fontWeight = FontWeight.SemiBold,
         )
     }
