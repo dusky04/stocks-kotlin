@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -18,6 +19,7 @@ import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SearchBar
 import androidx.compose.material3.SearchBarDefaults
@@ -77,13 +79,18 @@ fun StockSearch(viewModel: StocksViewModel) {
                     onExpandedChange = { expanded = it },
                     placeholder = { Text("Search Stocks", fontFamily = sansFontFamily) },
                     leadingIcon = {
-                        if (!expanded) Icon(
-                            Icons.Default.Search,
-                            contentDescription = null
-                        ) else Icon(
-                            Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = null
-                        )
+                        IconButton(onClick = {
+                            expanded = !expanded
+
+                        }) {
+                            if (!expanded) Icon(
+                                Icons.Default.Search,
+                                contentDescription = null
+                            ) else Icon(
+                                Icons.AutoMirrored.Filled.ArrowBack,
+                                contentDescription = null
+                            )
+                        }
                     }
                 )
             },
@@ -92,7 +99,7 @@ fun StockSearch(viewModel: StocksViewModel) {
         ) {
             tickerSearchResults.bestMatches?.let { results ->
                 if (results.isNotEmpty()) {
-                    LazyColumn(modifier = Modifier.weight(1f)) {
+                    LazyColumn(modifier = Modifier.fillMaxSize()) {
                         items(items = results, key = { it.symbol ?: "" }) { stock ->
                             StockResultItem(
                                 stock = stock,
@@ -105,7 +112,12 @@ fun StockSearch(viewModel: StocksViewModel) {
                         }
                     }
                 } else {
-                    CircularProgressIndicator()
+                    Box(
+                        modifier = Modifier.fillMaxSize(),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        CircularProgressIndicator()
+                    }
                 }
             }
         }

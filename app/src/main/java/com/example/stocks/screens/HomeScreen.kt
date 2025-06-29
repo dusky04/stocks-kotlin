@@ -2,6 +2,7 @@ package com.example.stocks.screens
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
@@ -165,12 +166,16 @@ fun HomeScreen(
 
     Column(
         modifier = Modifier
-            .fillMaxWidth()
-            .padding(12.dp),
+            .fillMaxSize(),
         verticalArrangement = Arrangement.spacedBy(4.dp)
     ) {
         StockSearch(viewModel)
-        Carousel("Top Gainers", topGainers, true)
-        Carousel("Top Losers", topLosers, false)
+        Column(
+            modifier = Modifier.padding(horizontal = 12.dp),
+            verticalArrangement = Arrangement.spacedBy(4.dp)
+        ) {
+            Carousel("Top Gainers", topGainers, true)
+            Carousel("Top Losers", topLosers, false)
+        }
     }
 }

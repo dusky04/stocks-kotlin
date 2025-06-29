@@ -2,10 +2,7 @@ package com.example.stocks
 
 import android.util.Log
 import androidx.compose.animation.AnimatedContentTransitionScope
-import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.systemBars
-import androidx.compose.foundation.layout.windowInsetsPadding
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
@@ -94,7 +91,7 @@ fun StocksApp(
     CompositionLocalProvider(LocalNavController provides navController) {
         StocksTheme {
             Surface(
-                modifier = Modifier.windowInsetsPadding(WindowInsets.systemBars),
+                modifier = Modifier.fillMaxSize(),
                 color = MaterialTheme.colorScheme.background
             ) {
                 Scaffold(
@@ -102,19 +99,45 @@ fun StocksApp(
                     NavHost(
                         navController = navController,
                         startDestination = Destination.Home.route,
-                        modifier = Modifier.padding(innerPadding)
                     ) {
-                        composable(Destination.Home.route, exitTransition = {
-                            slideOutOfContainer(
-                                AnimatedContentTransitionScope.SlideDirection.Left,
-                            )
-                        }) {
+                        composable(
+                            Destination.Home.route,
+                            exitTransition = {
+                                slideOutOfContainer(
+                                    AnimatedContentTransitionScope.SlideDirection.Left,
+                                )
+                            },
+                        ) {
                             HomeScreen(stocksViewModel, newsViewModel)
                         }
-                        composable(Destination.WatchList.route) {
+                        composable(
+                            Destination.WatchList.route,
+                            enterTransition = {
+                                slideIntoContainer(
+                                    AnimatedContentTransitionScope.SlideDirection.Left,
+                                )
+                            },
+                            exitTransition = {
+                                slideOutOfContainer(
+                                    AnimatedContentTransitionScope.SlideDirection.Right,
+                                )
+                            },
+                        ) {
                             WatchListScreen(watchListViewModel)
                         }
-                        composable(Destination.News.route) {
+                        composable(
+                            Destination.News.route,
+                            enterTransition = {
+                                slideIntoContainer(
+                                    AnimatedContentTransitionScope.SlideDirection.Left,
+                                )
+                            },
+                            exitTransition = {
+                                slideOutOfContainer(
+                                    AnimatedContentTransitionScope.SlideDirection.Right,
+                                )
+                            },
+                        ) {
                             NewsScreen(newsViewModel)
                         }
                         composable(
@@ -125,7 +148,7 @@ fun StocksApp(
                                     AnimatedContentTransitionScope.SlideDirection.Left,
                                 )
                             },
-                            popExitTransition = {
+                            exitTransition = {
                                 slideOutOfContainer(
                                     AnimatedContentTransitionScope.SlideDirection.Right,
                                 )
