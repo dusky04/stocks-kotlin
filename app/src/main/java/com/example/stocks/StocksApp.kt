@@ -20,6 +20,11 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.example.stocks.components.BottomNavBar
+import com.example.stocks.models.CompanyViewModel
+import com.example.stocks.models.SearchViewModel
+import com.example.stocks.models.TimeSeriesViewModel
+import com.example.stocks.models.TopGainersLoserViewModel
+import com.example.stocks.models.WatchListViewModel
 import com.example.stocks.screens.HomeScreen
 import com.example.stocks.screens.OverviewScreen
 import com.example.stocks.screens.TopListScreen
@@ -62,8 +67,7 @@ sealed interface Destination {
         companion object {
             const val KIND = "kind"
             val arguments = listOf(
-                navArgument(KIND) { type = NavType.BoolType }
-            )
+                navArgument(KIND) { type = NavType.BoolType })
         }
     }
 }
@@ -74,7 +78,14 @@ val LocalNavController = staticCompositionLocalOf<NavHostController> {
 }
 
 @Composable
-fun StocksApp(stocksViewModel: StocksViewModel) {
+fun StocksApp(
+    stocksViewModel: StocksViewModel,
+    searchViewModel: SearchViewModel,
+    companyViewModel: CompanyViewModel,
+    timeSeriesViewModel: TimeSeriesViewModel,
+    watchListViewModel: WatchListViewModel,
+    topGainersLoserViewModel: TopGainersLoserViewModel
+) {
     val navController = rememberNavController()
     CompositionLocalProvider(LocalNavController provides navController) {
         StocksTheme {
@@ -97,7 +108,7 @@ fun StocksApp(stocksViewModel: StocksViewModel) {
                             HomeScreen(stocksViewModel)
                         }
                         composable(Destination.WatchList.route) {
-                            WatchListScreen(stocksViewModel)
+                            WatchListScreen(watchListViewModel)
                         }
                         composable(
                             Destination.Overview("", "", "", "").route,
@@ -118,8 +129,7 @@ fun StocksApp(stocksViewModel: StocksViewModel) {
                             val ticker = args?.getString(Destination.Overview.TICKER_ARG)
                             if (ticker != null) {
                                 OverviewScreen(
-                                    stocksViewModel,
-                                    ticker,
+                                    stocksViewModel, watchListViewModel, ticker
                                 )
                             } else {
                                 Log.e(
@@ -129,8 +139,7 @@ fun StocksApp(stocksViewModel: StocksViewModel) {
                             }
                         }
                         composable(
-                            Destination.TopList(true).route,
-                            Destination.TopList.arguments
+                            Destination.TopList(true).route, Destination.TopList.arguments
                         ) { backStackEntry ->
                             val kind =
                                 backStackEntry.arguments?.getBoolean(Destination.TopList.KIND)

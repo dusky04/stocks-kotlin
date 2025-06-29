@@ -14,7 +14,6 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.SheetState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.mutableStateOf
@@ -24,8 +23,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.stocks.StocksViewModel
 import com.example.stocks.data.CompanyOverviewData
+import com.example.stocks.models.WatchListViewModel
 import com.example.stocks.ui.theme.sansFontFamily
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -33,7 +32,7 @@ import com.example.stocks.ui.theme.sansFontFamily
 fun BottomSheet(
     onDismiss: () -> Unit,
     sheetState: SheetState,
-    viewModel: StocksViewModel,
+    watchListViewModel: WatchListViewModel,
     stock: CompanyOverviewData,
     availableWatchLists: List<String>,
     onSave: (CompanyOverviewData, List<String>) -> Unit
@@ -46,9 +45,6 @@ fun BottomSheet(
             }
         }
     }
-
-    val watchLists by viewModel.watchLists.collectAsState()
-
 
     ModalBottomSheet(
         onDismissRequest = { onDismiss() }, sheetState = sheetState
@@ -72,7 +68,7 @@ fun BottomSheet(
                 )
                 Button(onClick = {
                     if (text.isNotBlank()) {
-                        viewModel.addNewWatchList(text)
+                        watchListViewModel.addNewWatchList(text)
                         text = ""
                     }
                 }) { Text("Add", fontFamily = sansFontFamily) }

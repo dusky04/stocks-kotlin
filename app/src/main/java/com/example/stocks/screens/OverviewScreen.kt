@@ -42,6 +42,8 @@ import com.example.stocks.components.PillShapedBox
 import com.example.stocks.components.TopNavBar
 import com.example.stocks.data.CompanyOverviewData
 import com.example.stocks.data.timeSeriesGraphData
+import com.example.stocks.formatMarketCap
+import com.example.stocks.models.WatchListViewModel
 import com.example.stocks.ui.theme.backgroundColors
 import com.example.stocks.ui.theme.sansFontFamily
 
@@ -107,10 +109,11 @@ val companyOverviewData = CompanyOverviewData(
 @Composable
 fun OverviewScreen(
     viewModel: StocksViewModel,
+    watchListViewModel: WatchListViewModel,
     ticker: String,
 ) {
 //    val companyOverviewData by viewModel.companyOverviewData.collectAsState()
-    val watchLists by viewModel.watchLists.collectAsState()
+    val watchLists by watchListViewModel.watchLists.collectAsState()
 //    val timeSeriesData by viewModel.timeSeriesData.collectAsState()
 
     val backgroundColor = remember { backgroundColors.random() }
@@ -199,12 +202,12 @@ fun OverviewScreen(
             // Info Cards Section
             Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
                 HorizontalDivider()
-                InfoLabel("Market Cap", companyOverviewData.marketCapitalization ?: "")
+                InfoLabel("Market Cap", formatMarketCap(companyOverviewData.marketCapitalization))
                 InfoLabel("P/E Ratio", companyOverviewData.pERatio ?: "")
                 InfoLabel("EPS", companyOverviewData.ePS ?: "")
                 InfoLabel("Dividend Yield", companyOverviewData.dividendYield ?: "")
-                InfoLabel("52W Low", companyOverviewData.weekLow ?: "")
-                InfoLabel("52W High", companyOverviewData.weekHigh ?: "")
+                InfoLabel("52W Low", "$" + companyOverviewData.weekLow ?: "")
+                InfoLabel("52W High", "$" + companyOverviewData.weekHigh ?: "")
             }
 
             // About Section
@@ -232,9 +235,9 @@ fun OverviewScreen(
                 sheetState = sheetState,
                 stock = companyOverviewData,
                 availableWatchLists = watchLists.keys.toList(),
-                viewModel = viewModel,
+                watchListViewModel = watchListViewModel,
                 onSave = { stockTicker, selectedLists ->
-                    viewModel.addStockToWatchLists(companyOverviewData, selectedLists)
+                    watchListViewModel.addStockToWatchLists(companyOverviewData, selectedLists)
                     showBottomSheet = false
                 }
             )

@@ -20,8 +20,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -125,7 +123,8 @@ fun StockIndicesTable(
 @Composable
 fun StockItem(stock: TopGainerLoser, backgroundColor: Color) {
     val navController = LocalNavController.current
-    val isPositive = stock.changeAmount.toDoubleOrNull()?.let { it > 0 } ?: false
+    val isPositive = stock.changeAmount?.toDoubleOrNull()?.let { it > 0 } ?: false
+
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -148,7 +147,7 @@ fun StockItem(stock: TopGainerLoser, backgroundColor: Color) {
                     .sizeIn(minWidth = 40.dp)
             ) {
                 Text(
-                    text = stock.ticker,
+                    text = stock.ticker ?: "",
                     style = MaterialTheme.typography.labelSmall,
                     color = Color.White,
                     fontWeight = FontWeight.Medium,
@@ -157,7 +156,7 @@ fun StockItem(stock: TopGainerLoser, backgroundColor: Color) {
         }
 
         Text(
-            text = stock.price,
+            text = stock.price ?: "",
             style = MaterialTheme.typography.bodyMedium,
             color = Color(0xFF374151),
             fontWeight = FontWeight.Medium,
@@ -165,7 +164,7 @@ fun StockItem(stock: TopGainerLoser, backgroundColor: Color) {
         )
 
         Text(
-            text = if (isPositive) "+${stock.changeAmount}" else stock.changeAmount,
+            text = if (isPositive) "+${stock.changeAmount ?: ""}" else stock.changeAmount ?: "",
             style = MaterialTheme.typography.bodySmall,
             color = if (isPositive) Color(0xFF059669) else Color(0xFFDC2626),
             fontWeight = FontWeight.Medium,
@@ -190,7 +189,7 @@ fun StockItem(stock: TopGainerLoser, backgroundColor: Color) {
             )
 
             Text(
-                text = stock.changePercentage,
+                text = stock.changePercentage ?: "",
                 style = MaterialTheme.typography.bodySmall,
                 color = if (isPositive) Color(0xFF059669) else Color(0xFFDC2626),
                 fontWeight = FontWeight.Medium

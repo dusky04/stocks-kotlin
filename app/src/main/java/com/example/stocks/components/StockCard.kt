@@ -69,17 +69,15 @@ fun StockCard(cardInfo: TopGainerLoser, isGainer: Boolean) {
                 }
                 Column {
                     Text(
-                        text = cardInfo.ticker,
+                        text = cardInfo.ticker ?: "",
                         style = MaterialTheme.typography.bodyLarge.copy(
                             fontWeight = FontWeight.SemiBold, fontSize = 12.sp
                         ),
                         fontFamily = sansFontFamily
                     )
                     Text(
-                        text = "$%.2f".format(cardInfo.price.toFloat()),
-                        style = MaterialTheme.typography.bodyLarge.copy(
-                            fontSize = 12.sp
-                        ),
+                        text = cardInfo.price?.toFloatOrNull()?.let { "$%.2f".format(it) } ?: "N/A",
+                        style = MaterialTheme.typography.bodyLarge.copy(fontSize = 12.sp),
                         fontFamily = sansFontFamily,
                     )
                 }
@@ -88,7 +86,10 @@ fun StockCard(cardInfo: TopGainerLoser, isGainer: Boolean) {
                 horizontalAlignment = Alignment.End
             ) {
                 Text(
-                    text = "%.2f".format(cardInfo.changePercentage.dropLast(1).toFloat()) + "%",
+                    text =
+                        cardInfo.changePercentage?.dropLast(1)?.toFloatOrNull()?.let {
+                            "%.2f".format(it) + "%"
+                        } ?: "N/A",
                     style = MaterialTheme.typography.bodySmall.copy(
                         fontWeight = FontWeight.Medium, fontSize = 12.sp
                     ),
@@ -96,14 +97,14 @@ fun StockCard(cardInfo: TopGainerLoser, isGainer: Boolean) {
                     color = if (isGainer) Color(0xFF4CAF50) else Color(0xFFF44336)
                 )
                 Text(
-                    text = "%.2f".format(cardInfo.changeAmount.toFloat()),
+                    text = cardInfo.changeAmount?.toFloatOrNull()?.let { "$%.2f".format(it) }
+                        ?: "N/A",
                     style = MaterialTheme.typography.bodyMedium.copy(
                         fontSize = 12.sp
                     ),
                     fontFamily = sansFontFamily,
                     color = if (isGainer) Color(0xFF4CAF50) else Color(0xFFF44336)
                 )
-
             }
         }
     }

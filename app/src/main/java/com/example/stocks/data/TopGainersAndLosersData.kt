@@ -4,58 +4,45 @@ import com.google.gson.annotations.SerializedName
 
 data class MostActivelyTraded(
     @SerializedName("change_amount")
-    val changeAmount: String,
+    val changeAmount: String? = null,
 
     @SerializedName("change_percentage")
-    val changePercentage: String,
+    val changePercentage: String? = null,
 
-    val price: String,
+    val price: String? = null,
 
-    val ticker: String,
+    val ticker: String? = null,
 
-    val volume: String
+    val volume: String? = null
 )
 
 data class TopGainerLoser(
     @SerializedName("change_amount")
-    val changeAmount: String,
+    val changeAmount: String? = null,
 
     @SerializedName("change_percentage")
-    val changePercentage: String,
+    val changePercentage: String? = null,
 
-    val price: String,
+    val price: String? = null,
 
-    val ticker: String,
+    val ticker: String? = null,
 
-    val volume: String
+    val volume: String? = null
 )
 
-//data class TopLoser(
-//    @SerializedName("change_amount")
-//    val changeAmount: String,
-//
-//    @SerializedName("change_percentage")
-//    val changePercentage: String,
-//
-//    val price: String,
-//
-//    val ticker: String,
-//
-//    val volume: String
-//)
 
 data class TopGainersAndLosersData(
     @SerializedName("last_updated")
-    val lastUpdated: String?,
+    val lastUpdated: String? = null,
 
-    val metadata: String?,
+    val metadata: String? = null,
 
     @SerializedName("most_actively_traded")
-    val mostActivelyTraded: List<MostActivelyTraded>?,
+    val mostActivelyTraded: List<MostActivelyTraded>? = null,
 
     @SerializedName("top_gainers")
-    val topGainers: List<TopGainerLoser>?,
+    val topGainers: List<TopGainerLoser>? = null,
 
     @SerializedName("top_losers")
-    val topLosers: List<TopGainerLoser>?
+    val topLosers: List<TopGainerLoser>? = null
 )

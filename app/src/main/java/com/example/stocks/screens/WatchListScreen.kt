@@ -25,14 +25,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import com.example.stocks.StocksViewModel
+import com.example.stocks.models.WatchListViewModel
 import com.example.stocks.ui.theme.sansFontFamily
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun WatchListScreen(viewModel: StocksViewModel) {
-    val watchLists by viewModel.watchLists.collectAsState()
+fun WatchListScreen(watchListViewModel: WatchListViewModel) {
+    val watchLists by watchListViewModel.watchLists.collectAsState()
     val availableWatchLists = watchLists.keys.toList()
     var selectedTabIndex by rememberSaveable { mutableIntStateOf(0) }
 
@@ -71,7 +71,10 @@ fun WatchListScreen(viewModel: StocksViewModel) {
 
         val selectedWatchListName = availableWatchLists.getOrNull(selectedTabIndex)
         if (selectedWatchListName != null) {
-            WatchListTabScreen(viewModel = viewModel, watchListName = selectedWatchListName)
+            WatchListTabScreen(
+                watchListViewModel = watchListViewModel,
+                watchListName = selectedWatchListName
+            )
         }
     }
 }
