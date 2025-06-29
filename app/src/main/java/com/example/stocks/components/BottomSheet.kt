@@ -71,8 +71,10 @@ fun BottomSheet(
                     }, shape = RoundedCornerShape(12.dp)
                 )
                 Button(onClick = {
-                    viewModel.addNewWatchList(text)
-                    text = ""
+                    if (text.isNotBlank()) {
+                        viewModel.addNewWatchList(text)
+                        text = ""
+                    }
                 }) { Text("Add", fontFamily = sansFontFamily) }
             }
 

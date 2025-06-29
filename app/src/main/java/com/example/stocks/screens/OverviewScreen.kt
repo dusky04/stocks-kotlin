@@ -1,5 +1,6 @@
 package com.example.stocks.screens
 
+import MPLineChart
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -32,7 +33,6 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -135,10 +135,14 @@ fun OverviewScreen(
 ) {
 //    val companyOverviewData by viewModel.companyOverviewData.collectAsState()
     val watchLists by viewModel.watchLists.collectAsState()
+    val timeSeriesData by viewModel.timeSeriesData.collectAsState()
 
-    LaunchedEffect(true) {
+    val backgroundColor = remember { backgroundColors.random() }
+
+    LaunchedEffect(ticker) {
         // Get the company data through ticker name
-//        viewModel.getCompanyOverviewData(ticker)
+        viewModel.getCompanyOverviewData(ticker)
+        viewModel.getIntradayTimeSeries(ticker)
     }
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = false)
     var showBottomSheet by remember { mutableStateOf(false) }
@@ -163,7 +167,6 @@ fun OverviewScreen(
                 .verticalScroll(rememberScrollState()),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            // Top Card
             Card(
                 modifier = Modifier.fillMaxWidth(),
                 shape = RoundedCornerShape(20.dp),
@@ -171,7 +174,7 @@ fun OverviewScreen(
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .background(backgroundColors.random())
+                        .background(backgroundColor)
                         .padding(24.dp)
                 ) {
                     Text(
@@ -192,7 +195,6 @@ fun OverviewScreen(
                 }
             }
 
-            // Pill Labels
             Card(
                 shape = RoundedCornerShape(20.dp),
                 modifier = Modifier.fillMaxWidth(),
@@ -213,6 +215,29 @@ fun OverviewScreen(
                     }
                 }
             }
+            Card(
+                shape = RoundedCornerShape(20.dp),
+                modifier = Modifier.fillMaxWidth(),
+                elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+            ) {
+                Column(modifier = Modifier.padding(16.dp)) {
+                    Text(
+                        text = "Price (Intraday)",
+                        fontFamily = sansFontFamily,
+                        style = MaterialTheme.typography.titleMedium,
+                        fontWeight = FontWeight.SemiBold,
+                        modifier = Modifier.padding(bottom = 12.dp)
+                    )
+                    timeSeriesData.timeSeries?.let { data ->
+                        // Replace HChart with MPLineChart
+                        MPLineChart(
+                            data = data,
+                            lineColor = Color(0xFF52A3F9)
+                        )
+                    }
+                }
+            }
+
 
             // Info Cards Section
             Card(

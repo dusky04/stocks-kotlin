@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.stocks.api.FetcherInstance
 import com.example.stocks.data.CompanyOverviewData
 import com.example.stocks.data.TickerSearchData
+import com.example.stocks.data.TimeSeriesGraphData
 import com.example.stocks.data.TopGainerLoser
 import com.example.stocks.data.TopGainersAndLosersData
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -134,6 +135,31 @@ class StocksViewModel : ViewModel() {
                 Log.i("ERROR: In getCompanyOverviewData() ", response.message())
             }
         }
+    }
+
+    private val _timeSeriesGraphData =
+        MutableStateFlow<TimeSeriesGraphData>(TimeSeriesGraphData(null, null))
+    val timeSeriesData: StateFlow<TimeSeriesGraphData> =
+        _timeSeriesGraphData.asStateFlow()
+
+    fun getIntradayTimeSeries(ticker: String) {
+        viewModelScope.launch {
+            val response = apiInstance.getIntradayTimeSeries(
+                "TIME_SERIES_INTRADAY",
+                ticker,
+                "5min",
+                BuildConfig.API_KEY
+            )
+            if (response.isSuccessful) {
+                response.body()?.let { stockData ->
+                    _timeSeriesGraphData.value = stockData
+                }
+                Log.i("RESPONSE TIME SERIES", "Time series data: ${response.body()?.timeSeries?.keys.toString()}")
+            } else {
+                Log.e("ERROR: In getIntradayTimeSeries()", response.message())
+            }
+        }
+
     }
 
 

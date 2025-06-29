@@ -75,9 +75,9 @@ fun StockSearch(viewModel: StocksViewModel) {
                     },
                     expanded = expanded,
                     onExpandedChange = { expanded = it },
-                    placeholder = { Text("Search stocks", fontFamily = sansFontFamily) },
+                    placeholder = { Text("Search Stocks", fontFamily = sansFontFamily) },
                     leadingIcon = {
-                        if (expanded) Icon(
+                        if (!expanded) Icon(
                             Icons.Default.Search,
                             contentDescription = null
                         ) else Icon(

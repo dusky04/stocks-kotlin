@@ -1,11 +1,9 @@
 package com.example.stocks.screens
 
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import com.example.stocks.StocksViewModel
 import com.example.stocks.components.Carousel
@@ -159,7 +157,10 @@ fun HomeScreen(
 //        viewModel.getTopGainersAndLosers()
     }
 
-    Column(modifier = Modifier.fillMaxWidth()) {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+    ) {
         StockSearch(viewModel)
         Carousel("Top Gainers", topGainers, true)
         Carousel("Top Losers", topLosers, false)

@@ -2,6 +2,7 @@ package com.example.stocks.api
 
 import com.example.stocks.data.CompanyOverviewData
 import com.example.stocks.data.TickerSearchData
+import com.example.stocks.data.TimeSeriesGraphData
 import com.example.stocks.data.TopGainersAndLosersData
 import retrofit2.Response
 import retrofit2.http.GET
@@ -27,4 +28,12 @@ interface StocksAPI {
         @Query("symbol") companyName: String,
         @Query("apikey") apiKey: String
     ): Response<CompanyOverviewData>
+
+    @GET("/query")
+    suspend fun getIntradayTimeSeries(
+        @Query("function") functionName: String,
+        @Query("symbol") symbol: String,
+        @Query("interval") interval: String,
+        @Query("apikey") apiKey: String
+    ): Response<TimeSeriesGraphData>
 }

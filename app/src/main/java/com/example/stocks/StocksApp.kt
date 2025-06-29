@@ -2,7 +2,6 @@ package com.example.stocks
 
 import android.util.Log
 import androidx.compose.animation.AnimatedContentTransitionScope
-import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.systemBars
@@ -93,7 +92,6 @@ fun StocksApp(stocksViewModel: StocksViewModel) {
                         composable(Destination.Home.route, exitTransition = {
                             slideOutOfContainer(
                                 AnimatedContentTransitionScope.SlideDirection.Left,
-//                                tween(400)
                             )
                         }) {
                             HomeScreen(stocksViewModel)
@@ -107,13 +105,11 @@ fun StocksApp(stocksViewModel: StocksViewModel) {
                             enterTransition = {
                                 slideIntoContainer(
                                     AnimatedContentTransitionScope.SlideDirection.Left,
-//                                    tween(400)
                                 )
                             },
                             popExitTransition = {
                                 slideOutOfContainer(
                                     AnimatedContentTransitionScope.SlideDirection.Right,
-                                    tween(400)
                                 )
                             }
 

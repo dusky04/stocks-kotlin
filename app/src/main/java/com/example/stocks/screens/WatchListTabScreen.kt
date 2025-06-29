@@ -43,7 +43,8 @@ fun WatchListTabScreen(viewModel: StocksViewModel, watchListName: String) {
             Text(
                 text = "This watchlist is empty.",
                 style = MaterialTheme.typography.bodyLarge,
-                color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
+                color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f),
+                fontFamily = sansFontFamily
             )
         }
     } else {
@@ -90,8 +91,6 @@ fun StockWatchlistItem(stock: CompanyOverviewData) {
                     color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.8f)
                 )
             }
-            // You can add more info here, like price, if available
-            // For now, we'll use Market Cap as an example value
             Column(horizontalAlignment = Alignment.End) {
                 Text(
                     text = "Market Cap",
