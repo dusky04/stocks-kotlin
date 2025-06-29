@@ -92,7 +92,7 @@ fun StockSearch(viewModel: StocksViewModel) {
         ) {
             tickerSearchResults.bestMatches?.let { results ->
                 if (results.isNotEmpty()) {
-                    LazyColumn {
+                    LazyColumn(modifier = Modifier.weight(1f)) {
                         items(items = results, key = { it.symbol ?: "" }) { stock ->
                             StockResultItem(
                                 stock = stock,

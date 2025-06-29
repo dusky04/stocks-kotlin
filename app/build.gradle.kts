@@ -87,4 +87,8 @@ dependencies {
 
     // Charting Library
     implementation(libs.mpandroidchart)
+
+    // For loading images from the internet
+    implementation(libs.coil.compose)
+    implementation(libs.coil.network.okhttp)
 }

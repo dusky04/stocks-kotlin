@@ -21,11 +21,13 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.example.stocks.components.BottomNavBar
 import com.example.stocks.models.CompanyViewModel
+import com.example.stocks.models.NewsViewModel
 import com.example.stocks.models.SearchViewModel
 import com.example.stocks.models.TimeSeriesViewModel
 import com.example.stocks.models.TopGainersLoserViewModel
 import com.example.stocks.models.WatchListViewModel
 import com.example.stocks.screens.HomeScreen
+import com.example.stocks.screens.NewsScreen
 import com.example.stocks.screens.OverviewScreen
 import com.example.stocks.screens.TopListScreen
 import com.example.stocks.screens.WatchListScreen
@@ -43,11 +45,12 @@ sealed interface Destination {
         override val route: String = "watch"
     }
 
+    data object News : Destination {
+        override val route: String = "news"
+    }
+
     data class Overview(
         val ticker: String,
-        val price: String,
-        val changeAmount: String,
-        val changePercentage: String,
     ) : Destination {
         override val route: String = "overview/{ticker}"
 
@@ -84,7 +87,8 @@ fun StocksApp(
     companyViewModel: CompanyViewModel,
     timeSeriesViewModel: TimeSeriesViewModel,
     watchListViewModel: WatchListViewModel,
-    topGainersLoserViewModel: TopGainersLoserViewModel
+    topGainersLoserViewModel: TopGainersLoserViewModel,
+    newsViewModel: NewsViewModel
 ) {
     val navController = rememberNavController()
     CompositionLocalProvider(LocalNavController provides navController) {
@@ -105,13 +109,16 @@ fun StocksApp(
                                 AnimatedContentTransitionScope.SlideDirection.Left,
                             )
                         }) {
-                            HomeScreen(stocksViewModel)
+                            HomeScreen(stocksViewModel, newsViewModel)
                         }
                         composable(Destination.WatchList.route) {
                             WatchListScreen(watchListViewModel)
                         }
+                        composable(Destination.News.route) {
+                            NewsScreen()
+                        }
                         composable(
-                            Destination.Overview("", "", "", "").route,
+                            Destination.Overview("").route,
                             Destination.Overview.arguments,
                             enterTransition = {
                                 slideIntoContainer(

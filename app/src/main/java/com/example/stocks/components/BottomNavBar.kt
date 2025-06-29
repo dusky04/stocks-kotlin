@@ -15,6 +15,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.example.stocks.Destination
 import com.example.stocks.LocalNavController
+import com.example.stocks.assets.Newspaper
 
 
 data class BottomNavItem(
@@ -28,6 +29,9 @@ val bottomNavItems = listOf(
     BottomNavItem(Destination.Home, "Home", Icons.Outlined.Home, Icons.Filled.Home),
     BottomNavItem(
         Destination.WatchList, "WatchList", Icons.Outlined.FavoriteBorder, Icons.Filled.Favorite
+    ),
+    BottomNavItem(
+        Destination.News, "News", Newspaper, Newspaper
     )
 )
 

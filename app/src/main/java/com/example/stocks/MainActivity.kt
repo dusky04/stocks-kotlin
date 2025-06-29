@@ -6,6 +6,7 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.lifecycle.ViewModelProvider
 import com.example.stocks.models.CompanyViewModel
+import com.example.stocks.models.NewsViewModel
 import com.example.stocks.models.SearchViewModel
 import com.example.stocks.models.TimeSeriesViewModel
 import com.example.stocks.models.TopGainersLoserViewModel
@@ -23,13 +24,15 @@ class MainActivity : ComponentActivity() {
             val watchListViewModel = ViewModelProvider(this)[WatchListViewModel::class.java]
             val topGainersLoserViewModel =
                 ViewModelProvider(this)[TopGainersLoserViewModel::class.java]
+            val newsViewModel = ViewModelProvider(this)[NewsViewModel::class.java]
             StocksApp(
                 stocksViewModel,
                 searchViewModel,
                 companyViewModel,
                 timeSeriesViewModel,
                 watchListViewModel,
-                topGainersLoserViewModel
+                topGainersLoserViewModel,
+                newsViewModel
             )
         }
     }

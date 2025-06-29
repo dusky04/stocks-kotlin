@@ -1,6 +1,7 @@
 package com.example.stocks.api
 
 import com.example.stocks.data.CompanyOverviewData
+import com.example.stocks.data.NewsData
 import com.example.stocks.data.TickerSearchData
 import com.example.stocks.data.TimeSeriesGraphData
 import com.example.stocks.data.TopGainersAndLosersData
@@ -36,4 +37,10 @@ interface StocksAPI {
         @Query("interval") interval: String,
         @Query("apikey") apiKey: String
     ): Response<TimeSeriesGraphData>
+
+    @GET("/query")
+    suspend fun getNewsArticles(
+        @Query("function") functionName: String,
+        @Query("apikey") apikey: String
+    ): Response<NewsData>
 }
