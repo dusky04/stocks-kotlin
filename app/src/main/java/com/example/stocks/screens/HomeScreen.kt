@@ -2,28 +2,17 @@ package com.example.stocks.screens
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.example.stocks.StocksViewModel
 import com.example.stocks.components.Carousel
-import com.example.stocks.components.NewsArticleComponent
 import com.example.stocks.components.StockSearch
 import com.example.stocks.data.TopGainerLoser
-import com.example.stocks.data.sampleNewsData
 import com.example.stocks.models.NewsViewModel
-import com.example.stocks.ui.theme.sansFontFamily
 
 
 val topGainers = listOf(
@@ -183,14 +172,5 @@ fun HomeScreen(
         StockSearch(viewModel)
         Carousel("Top Gainers", topGainers, true)
         Carousel("Top Losers", topLosers, false)
-        Spacer(Modifier.height(10.dp))
-        Text(
-            "News",
-            fontFamily = sansFontFamily,
-            fontWeight = FontWeight.Bold,
-            style = MaterialTheme.typography.titleLarge
-        )
-        NewsArticleComponent(sampleNewsData.feed?.get(0)!!)
-
     }
 }
