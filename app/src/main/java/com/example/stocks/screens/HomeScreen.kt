@@ -4,6 +4,8 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import com.example.stocks.StocksViewModel
 import com.example.stocks.components.Carousel
@@ -151,7 +153,7 @@ fun HomeScreen(
     // all state variables
 //    val topGainers by viewModel.topGainers.collectAsState()
 //    val topLosers by viewModel.topLosers.collectAsState()
-
+//
     LaunchedEffect(true) {
         // run when the screen is first composed
 //        viewModel.getTopGainersAndLosers()

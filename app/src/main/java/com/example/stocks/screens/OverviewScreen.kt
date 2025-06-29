@@ -2,14 +2,9 @@ package com.example.stocks.screens
 
 import MPLineChart
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
@@ -22,6 +17,7 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExtendedFloatingActionButton
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -34,7 +30,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
@@ -42,35 +37,16 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.stocks.StocksViewModel
 import com.example.stocks.components.BottomSheet
+import com.example.stocks.components.InfoLabel
+import com.example.stocks.components.PillShapedBox
 import com.example.stocks.components.TopNavBar
 import com.example.stocks.data.CompanyOverviewData
+import com.example.stocks.data.timeSeriesGraphData
 import com.example.stocks.ui.theme.backgroundColors
 import com.example.stocks.ui.theme.sansFontFamily
 
 // FIXME: Can't really show change amount or market status from this endpoint!
 
-@Composable
-fun PillShapedBox(text: String) {
-    Box(
-        modifier = Modifier
-            .border(
-                width = 1.dp,
-                color = Color(0xFFDADCE0), // light gray border color
-                shape = RoundedCornerShape(24.dp)
-            )
-            .background(
-                color = Color(0xFFF1F3F4),
-                shape = RoundedCornerShape(24.dp)
-            )
-    ) {
-        Text(
-            text = text,
-            fontFamily = sansFontFamily,
-            modifier = Modifier.padding(horizontal = 12.dp, vertical = 2.dp),
-            fontWeight = FontWeight.Medium
-        )
-    }
-}
 
 val companyOverviewData = CompanyOverviewData(
     address = "1 NEW ORCHARD ROAD, ARMONK, NY, US",
@@ -135,14 +111,14 @@ fun OverviewScreen(
 ) {
 //    val companyOverviewData by viewModel.companyOverviewData.collectAsState()
     val watchLists by viewModel.watchLists.collectAsState()
-    val timeSeriesData by viewModel.timeSeriesData.collectAsState()
+//    val timeSeriesData by viewModel.timeSeriesData.collectAsState()
 
     val backgroundColor = remember { backgroundColors.random() }
 
     LaunchedEffect(ticker) {
         // Get the company data through ticker name
-        viewModel.getCompanyOverviewData(ticker)
-        viewModel.getIntradayTimeSeries(ticker)
+//        viewModel.getCompanyOverviewData(ticker)
+//        viewModel.getIntradayTimeSeries(ticker)
     }
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = false)
     var showBottomSheet by remember { mutableStateOf(false) }
@@ -151,7 +127,7 @@ fun OverviewScreen(
         topBar = { TopNavBar("Overview") },
         floatingActionButton = {
             ExtendedFloatingActionButton(
-                text = { Text("Show bottom sheet") },
+                text = { Text("Save") },
                 icon = { Icon(Icons.Filled.Add, contentDescription = "") },
                 onClick = {
                     showBottomSheet = true
@@ -165,10 +141,9 @@ fun OverviewScreen(
                 .fillMaxWidth()
                 .padding(horizontal = 16.dp)
                 .verticalScroll(rememberScrollState()),
-            verticalArrangement = Arrangement.spacedBy(16.dp)
+            verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
             Card(
-                modifier = Modifier.fillMaxWidth(),
                 shape = RoundedCornerShape(20.dp),
             ) {
                 Column(
@@ -184,7 +159,6 @@ fun OverviewScreen(
                         letterSpacing = 1.2.sp,
                         color = Color.White
                     )
-                    Spacer(modifier = Modifier.height(4.dp))
                     Text(
                         text = companyOverviewData.name ?: "",
                         style = MaterialTheme.typography.headlineSmall,
@@ -200,10 +174,7 @@ fun OverviewScreen(
                 modifier = Modifier.fillMaxWidth(),
                 colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface)
             ) {
-                LazyRow(
-                    horizontalArrangement = Arrangement.spacedBy(4.dp),
-                    modifier = Modifier.padding(12.dp)
-                ) {
+                LazyRow(horizontalArrangement = Arrangement.spacedBy(4.dp)) {
                     items(
                         listOf(
                             companyOverviewData.exchange ?: "",
@@ -215,105 +186,44 @@ fun OverviewScreen(
                     }
                 }
             }
-            Card(
-                shape = RoundedCornerShape(20.dp),
-                modifier = Modifier.fillMaxWidth(),
-                elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
-            ) {
-                Column(modifier = Modifier.padding(16.dp)) {
-                    Text(
-                        text = "Price (Intraday)",
-                        fontFamily = sansFontFamily,
-                        style = MaterialTheme.typography.titleMedium,
-                        fontWeight = FontWeight.SemiBold,
-                        modifier = Modifier.padding(bottom = 12.dp)
+
+            Column {
+                timeSeriesGraphData.timeSeries?.let { data ->
+                    MPLineChart(
+                        data = data,
+                        lineColor = backgroundColor
                     )
-                    timeSeriesData.timeSeries?.let { data ->
-                        // Replace HChart with MPLineChart
-                        MPLineChart(
-                            data = data,
-                            lineColor = Color(0xFF52A3F9)
-                        )
-                    }
                 }
             }
 
-
             // Info Cards Section
-            Card(
-                shape = RoundedCornerShape(20.dp),
-                modifier = Modifier.fillMaxWidth(),
-                elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
-            ) {
-                Column(modifier = Modifier.padding(16.dp)) {
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.spacedBy(12.dp)
-                    ) {
-                        InfoCard("Market Cap", "$270.5B", modifier = Modifier.weight(1f))
-                        InfoCard("P/E Ratio", "49.75", modifier = Modifier.weight(1f))
-                    }
-
-                    Spacer(modifier = Modifier.height(12.dp))
-
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.spacedBy(12.dp)
-                    ) {
-                        InfoCard("EPS", "$5.85", modifier = Modifier.weight(1f))
-                        InfoCard("Dividend Yield", "2.31%", modifier = Modifier.weight(1f))
-                    }
-
-                    Spacer(modifier = Modifier.height(12.dp))
-
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.spacedBy(12.dp)
-                    ) {
-                        InfoCard("52W High", "$296.16", modifier = Modifier.weight(1f))
-                        InfoCard("52W Low", "$165.52", modifier = Modifier.weight(1f))
-                    }
-                }
+            Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                HorizontalDivider()
+                InfoLabel("Market Cap", companyOverviewData.marketCapitalization ?: "")
+                InfoLabel("P/E Ratio", companyOverviewData.pERatio ?: "")
+                InfoLabel("EPS", companyOverviewData.ePS ?: "")
+                InfoLabel("Dividend Yield", companyOverviewData.dividendYield ?: "")
+                InfoLabel("52W Low", companyOverviewData.weekLow ?: "")
+                InfoLabel("52W High", companyOverviewData.weekHigh ?: "")
             }
 
             // About Section
-            Card(
-                shape = RoundedCornerShape(20.dp),
-                modifier = Modifier.fillMaxWidth(),
-                elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
-            ) {
-                Column(modifier = Modifier.padding(16.dp)) {
-                    Text(
-                        text = "About",
-                        fontFamily = sansFontFamily,
-                        style = MaterialTheme.typography.titleMedium,
-                        fontWeight = FontWeight.SemiBold,
-                        modifier = Modifier.padding(bottom = 12.dp)
-                    )
+            Column {
+                Text(
+                    text = "About",
+                    fontFamily = sansFontFamily,
+                    style = MaterialTheme.typography.titleMedium,
+                    fontWeight = FontWeight.SemiBold,
+                    modifier = Modifier.padding(bottom = 12.dp)
+                )
 
-                    Text(
-                        text = companyOverviewData.description ?: "",
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.8f),
-                        lineHeight = 20.sp
-                    )
-                }
+                Text(
+                    text = companyOverviewData.description ?: "",
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.8f),
+                    lineHeight = 20.sp
+                )
             }
-            Card(
-                shape = RoundedCornerShape(20.dp),
-                modifier = Modifier.fillMaxWidth(),
-                elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
-            ) {
-                Column(modifier = Modifier.padding(16.dp)) {
-                    CompanyDetailRow(
-                        "Website",
-                        companyOverviewData.officialSite ?: "",
-                        isLast = true
-                    )
-                }
-            }
-
-            Spacer(modifier = Modifier.height(24.dp))
         }
 
         if (showBottomSheet) {
@@ -328,71 +238,6 @@ fun OverviewScreen(
                     showBottomSheet = false
                 }
             )
-        }
-    }
-}
-
-@Composable
-private fun InfoCard(
-    title: String, value: String, modifier: Modifier = Modifier
-) {
-    Card(
-        modifier = modifier,
-        shape = RoundedCornerShape(16.dp),
-        colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surface
-        ),
-        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
-    ) {
-        Column(
-            modifier = Modifier
-                .padding(16.dp)
-                .fillMaxWidth(),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            Text(
-                text = title,
-                style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f)
-            )
-            Spacer(modifier = Modifier.height(4.dp))
-            Text(
-                text = value,
-                style = MaterialTheme.typography.titleMedium,
-                fontWeight = FontWeight.Bold,
-                color = MaterialTheme.colorScheme.onSurface
-            )
-        }
-    }
-}
-
-@Composable
-private fun CompanyDetailRow(
-    label: String, value: String, isLast: Boolean = false
-) {
-    Column {
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Text(
-                text = label.uppercase(),
-                style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5f),
-                fontWeight = FontWeight.SemiBold,
-                modifier = Modifier.weight(1f),
-            )
-            Text(
-                text = value,
-                fontFamily = sansFontFamily,
-                style = MaterialTheme.typography.bodyMedium,
-                fontWeight = FontWeight.Medium,
-                color = MaterialTheme.colorScheme.onSurface
-            )
-        }
-        if (!isLast) {
-            Spacer(modifier = Modifier.height(5.dp))
         }
     }
 }
