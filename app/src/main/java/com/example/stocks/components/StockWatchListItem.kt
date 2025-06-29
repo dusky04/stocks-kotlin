@@ -1,5 +1,7 @@
 package com.example.stocks.components
 
+import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -18,6 +20,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.stocks.LocalNavController
 import com.example.stocks.data.CompanyOverviewData
 import com.example.stocks.formatMarketCap
 import com.example.stocks.ui.theme.contrastColors
@@ -25,11 +28,25 @@ import com.example.stocks.ui.theme.sansFontFamily
 
 @Composable
 fun StockWatchlistItem(stock: CompanyOverviewData) {
+    val navController = LocalNavController.current
     Card(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = Modifier
+            .fillMaxWidth()
+            .border(
+                color = contrastColors.random(),
+                width = 2.dp,
+                shape = RoundedCornerShape(16.dp)
+            )
+            .clickable(
+                onClick = {
+                    navController.navigate("overview/${stock.symbol}")
+                }
+            ),
         shape = RoundedCornerShape(16.dp),
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
-        colors = CardDefaults.cardColors(containerColor = contrastColors[0])
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.surface
+        )
     ) {
         Row(
             modifier = Modifier
@@ -43,14 +60,15 @@ fun StockWatchlistItem(stock: CompanyOverviewData) {
                     text = stock.symbol ?: "N/A",
                     style = MaterialTheme.typography.bodyLarge,
                     fontWeight = FontWeight.Bold,
-                    fontFamily = sansFontFamily
+                    fontFamily = sansFontFamily,
+                    color = MaterialTheme.colorScheme.onSurface
                 )
                 Spacer(modifier = Modifier.height(4.dp))
                 Text(
                     text = stock.name ?: "No Company Name",
                     style = MaterialTheme.typography.bodyMedium,
                     fontFamily = sansFontFamily,
-                    color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.8f)
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
             }
             Column(horizontalAlignment = Alignment.End) {
@@ -65,7 +83,8 @@ fun StockWatchlistItem(stock: CompanyOverviewData) {
                     style = MaterialTheme.typography.bodyLarge,
                     fontWeight = FontWeight.SemiBold,
                     fontFamily = sansFontFamily,
-                    fontSize = 18.sp
+                    fontSize = 18.sp,
+                    color = MaterialTheme.colorScheme.onSurface
                 )
             }
         }

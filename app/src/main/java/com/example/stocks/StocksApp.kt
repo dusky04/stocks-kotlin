@@ -14,6 +14,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.example.stocks.components.BottomNavBar
@@ -88,6 +89,10 @@ fun StocksApp(
     newsViewModel: NewsViewModel
 ) {
     val navController = rememberNavController()
+    val navBackStackEntry = navController.currentBackStackEntryAsState().value
+    val currentRoute = navBackStackEntry?.destination?.route
+    val showBottomBar = currentRoute?.startsWith("overview") != true
+
     CompositionLocalProvider(LocalNavController provides navController) {
         StocksTheme {
             Surface(
@@ -95,7 +100,8 @@ fun StocksApp(
                 color = MaterialTheme.colorScheme.background
             ) {
                 Scaffold(
-                    bottomBar = { BottomNavBar() }) { innerPadding ->
+                    bottomBar = { if (showBottomBar) BottomNavBar() }) { innerPadding ->
+
                     NavHost(
                         navController = navController,
                         startDestination = Destination.Home.route,
