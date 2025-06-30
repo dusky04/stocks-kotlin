@@ -20,6 +20,8 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -38,8 +40,8 @@ import com.example.stocks.ui.theme.sansFontFamily
 @Composable
 fun TopListScreen(viewModel: StocksViewModel, kind: Boolean) {
     // State Variables
-//    val topGainers by viewModel.topGainers.collectAsState()
-//    val topLosers by viewModel.topLosers.collectAsState()
+    val topGainers by viewModel.topGainers.collectAsState()
+    val topLosers by viewModel.topLosers.collectAsState()
 
     val stocksToShow = if (kind) topGainers else topLosers
     val title = if (kind) "Top Gainers" else "Top Losers"
@@ -158,7 +160,7 @@ fun StockItem(stock: TopGainerLoser, backgroundColor: Color) {
         Text(
             text = stock.price ?: "",
             style = MaterialTheme.typography.bodyMedium,
-            color = Color(0xFF374151),
+            color = MaterialTheme.colorScheme.onSurface,
             fontWeight = FontWeight.Medium,
             modifier = Modifier.weight(1.0f)
         )

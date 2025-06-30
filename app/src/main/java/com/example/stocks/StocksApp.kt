@@ -114,7 +114,7 @@ fun StocksApp(
                                 )
                             },
                         ) {
-                            HomeScreen(stocksViewModel, newsViewModel)
+                            HomeScreen(stocksViewModel)
                         }
                         composable(
                             Destination.WatchList.route,
