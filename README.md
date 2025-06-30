@@ -2,12 +2,7 @@
 
 A simple Android application to track stock prices and manage your portfolio.
 
-<img src="screenshots\00_HomeScreenLight.jpg" width="300">
-<img src="screenshots\00_HomeScreenDark.jpg" width="300">
-<img src="screenshots\01_StockOverviewLight.jpg" width="300">
-<img src="screenshots\01_StockOverviewDark.jpg" width="300">
-<img src="screenshots\02_NewsScreenLight.jpg" width="300">
-<img src="screenshots\02_NewsScreenDark.jpg" width="300">
+Resources (including more sample screenshots as well as a demo video): `[Google Drive Link](https://drive.google.com/drive/folders/1rGy5rNoEKm67GmlsXbRe46K9gUitW09P?usp=sharing)`
 
 ## Features
 
@@ -59,3 +54,12 @@ Key libraries include:
 - `Jetpack Compose`
 - `Kotlin Coroutines`
 - `Retrofit` and `okhttp3`
+
+## Screenshots
+
+<img src="screenshots\00_HomeScreenLight.jpg" width="300">
+<img src="screenshots\00_HomeScreenDark.jpg" width="300">
+<img src="screenshots\01_StockOverviewLight.jpg" width="300">
+<img src="screenshots\01_StockOverviewDark.jpg" width="300">
+<img src="screenshots\02_NewsScreenLight.jpg" width="300">
+<img src="screenshots\02_NewsScreenDark.jpg" width="300">
