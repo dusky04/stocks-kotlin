@@ -11,6 +11,13 @@ A simple Android application to track stock prices and manage your portfolio.
 
 ## Building
 
+> [!NOTE]
+> Before building the App yourself, add your own Alpha Vantage API Key to `local.properties` under property `API_KEY`
+
+```kt
+API_KEY="YOUR_API_KEY"
+```
+
 1.  **Clone the repository:**
     ```sh
     git clone https://github.com/dusky04/stocks-kotlin.git
