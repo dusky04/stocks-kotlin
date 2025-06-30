@@ -21,22 +21,26 @@ class TimeSeriesViewModel : ViewModel() {
 
     fun getIntradayTimeSeries(ticker: String) {
         viewModelScope.launch {
-            val response = apiInstance.getIntradayTimeSeries(
-                "TIME_SERIES_INTRADAY",
-                ticker,
-                "5min",
-                BuildConfig.API_KEY
-            )
-            if (response.isSuccessful) {
-                response.body()?.let { stockData ->
-                    _timeSeriesGraphData.value = stockData
-                }
-                Log.i(
-                    "RESPONSE TIME SERIES",
-                    "Time series data: ${response.body()?.timeSeries?.keys.toString()}"
+            try {
+                val response = apiInstance.getIntradayTimeSeries(
+                    "TIME_SERIES_INTRADAY",
+                    ticker,
+                    "5min",
+                    BuildConfig.API_KEY
                 )
-            } else {
-                Log.e("ERROR: In getIntradayTimeSeries()", response.message())
+                if (response.isSuccessful) {
+                    response.body()?.let { stockData ->
+                        _timeSeriesGraphData.value = stockData
+                    }
+                    Log.i(
+                        "RESPONSE TIME SERIES",
+                        "Time series data: ${response.body()?.timeSeries?.keys.toString()}"
+                    )
+                } else {
+                    Log.e("ERROR: In getIntradayTimeSeries()", response.message())
+                }
+            } catch (e: Exception) {
+                Log.i("Failed Network Request", "")
             }
         }
     }

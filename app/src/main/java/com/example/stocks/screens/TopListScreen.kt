@@ -28,20 +28,20 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.example.stocks.LocalNavController
-import com.example.stocks.StocksViewModel
 import com.example.stocks.assets.TrendingDownIcon
 import com.example.stocks.assets.TrendingUpIcon
 import com.example.stocks.components.TopNavBar
 import com.example.stocks.data.TopGainerLoser
+import com.example.stocks.models.TopGainersLoserViewModel
 import com.example.stocks.ui.theme.backgroundColors
 import com.example.stocks.ui.theme.sansFontFamily
 
 
 @Composable
-fun TopListScreen(viewModel: StocksViewModel, kind: Boolean) {
+fun TopListScreen(topGainersLoserViewMode: TopGainersLoserViewModel, kind: Boolean) {
     // State Variables
-    val topGainers by viewModel.topGainers.collectAsState()
-    val topLosers by viewModel.topLosers.collectAsState()
+    val topGainers by topGainersLoserViewMode.topGainers.collectAsState()
+    val topLosers by topGainersLoserViewMode.topLosers.collectAsState()
 
     val stocksToShow = if (kind) topGainers else topLosers
     val title = if (kind) "Top Gainers" else "Top Losers"

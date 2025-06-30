@@ -26,18 +26,22 @@ class TopGainersLoserViewModel : ViewModel() {
     val topLosers: StateFlow<List<TopGainerLoser>> = _topLosers.asStateFlow()
 
     fun getTopGainersAndLosers() {
-        viewModelScope.launch {
-            val response =
-                apiInstance.getTopGainersAndLosers("TOP_GAINERS_LOSERS", BuildConfig.API_KEY)
-            if (response.isSuccessful) {
-                response.body()?.let { data ->
-                    _topLosersAndGainers.value = data
-                    _topGainers.value = data.topGainers ?: emptyList()
-                    _topLosers.value = data.topLosers ?: emptyList()
+        try {
+            viewModelScope.launch {
+                val response =
+                    apiInstance.getTopGainersAndLosers("TOP_GAINERS_LOSERS", BuildConfig.API_KEY)
+                if (response.isSuccessful) {
+                    response.body()?.let { data ->
+                        _topLosersAndGainers.value = data
+                        _topGainers.value = data.topGainers ?: emptyList()
+                        _topLosers.value = data.topLosers ?: emptyList()
+                    }
+                } else {
+                    Log.i("ERROR: In getTopGainersAndLosers() ", response.message())
                 }
-            } else {
-                Log.i("ERROR: In getTopGainersAndLosers() ", response.message())
             }
+        } catch (e: Exception) {
+            Log.i("Failed Network Request", "")
         }
     }
 }

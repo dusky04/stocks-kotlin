@@ -37,16 +37,16 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.stocks.LocalNavController
-import com.example.stocks.StocksViewModel
 import com.example.stocks.data.TickerSearchResult
+import com.example.stocks.models.SearchViewModel
 import com.example.stocks.ui.theme.sansFontFamily
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun StockSearch(viewModel: StocksViewModel) {
+fun StockSearch(searchViewModel: SearchViewModel) {
     var expanded by rememberSaveable { mutableStateOf(false) }
     val textFieldState = rememberTextFieldState()
-    val tickerSearchResults by viewModel.tickerSearchResults.collectAsState()
+    val tickerSearchResults by searchViewModel.tickerSearchResults.collectAsState()
     var searchQuery by rememberSaveable { mutableStateOf("") }
     val navController = LocalNavController.current
 
@@ -54,7 +54,7 @@ fun StockSearch(viewModel: StocksViewModel) {
     LaunchedEffect(searchQuery) {
         kotlinx.coroutines.delay(500)
         if (searchQuery.isNotBlank()) {
-            viewModel.searchTicker(searchQuery)
+            searchViewModel.searchTicker(searchQuery)
         }
     }
 

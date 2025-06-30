@@ -10,22 +10,24 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.example.stocks.StocksViewModel
 import com.example.stocks.components.Carousel
 import com.example.stocks.components.StockSearch
+import com.example.stocks.models.SearchViewModel
+import com.example.stocks.models.TopGainersLoserViewModel
 
 
 @Composable
 fun HomeScreen(
-    viewModel: StocksViewModel,
+    topGainersLoserViewModel: TopGainersLoserViewModel,
+    searchViewModel: SearchViewModel
 ) {
     // all state variables
-    val topGainers by viewModel.topGainers.collectAsState()
-    val topLosers by viewModel.topLosers.collectAsState()
+    val topGainers by topGainersLoserViewModel.topGainers.collectAsState()
+    val topLosers by topGainersLoserViewModel.topLosers.collectAsState()
 
     LaunchedEffect(true) {
         // run when the screen is first composed
-        viewModel.getTopGainersAndLosers()
+        topGainersLoserViewModel.getTopGainersAndLosers()
     }
 
     Column(
@@ -33,7 +35,7 @@ fun HomeScreen(
             .fillMaxSize(),
         verticalArrangement = Arrangement.spacedBy(4.dp)
     ) {
-        StockSearch(viewModel)
+        StockSearch(searchViewModel)
         Column(
             modifier = Modifier
                 .padding(horizontal = 12.dp)

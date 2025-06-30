@@ -19,17 +19,22 @@ class CompanyViewModel : ViewModel() {
 
     fun getCompanyOverviewData(ticker: String) {
         viewModelScope.launch {
-            val response = apiInstance.getCompanyOverview(
-                "OVERVIEW", ticker, BuildConfig.API_KEY
-            )
-            if (response.isSuccessful) {
-                response.body()?.let { data ->
-                    _companyOverviewData.value = data
+            try {
+                val response = apiInstance.getCompanyOverview(
+                    "OVERVIEW", ticker, BuildConfig.API_KEY
+                )
+                if (response.isSuccessful) {
+                    response.body()?.let { data ->
+                        _companyOverviewData.value = data
+                    }
+                    Log.i("Response: ", response.body().toString())
+                } else {
+                    Log.i("ERROR: In getCompanyOverviewData() ", response.message())
                 }
-                Log.i("Response: ", response.body().toString())
-            } else {
-                Log.i("ERROR: In getCompanyOverviewData() ", response.message())
+            } catch (e: Exception) {
+                Log.i("Failed Network Request", "")
             }
         }
     }
+
 }

@@ -80,7 +80,6 @@ val LocalNavController = staticCompositionLocalOf<NavHostController> {
 
 @Composable
 fun StocksApp(
-    stocksViewModel: StocksViewModel,
     searchViewModel: SearchViewModel,
     companyViewModel: CompanyViewModel,
     timeSeriesViewModel: TimeSeriesViewModel,
@@ -114,7 +113,7 @@ fun StocksApp(
                                 )
                             },
                         ) {
-                            HomeScreen(stocksViewModel)
+                            HomeScreen(topGainersLoserViewModel, searchViewModel)
                         }
                         composable(
                             Destination.WatchList.route,
@@ -165,7 +164,10 @@ fun StocksApp(
                             val ticker = args?.getString(Destination.Overview.TICKER_ARG)
                             if (ticker != null) {
                                 OverviewScreen(
-                                    stocksViewModel, watchListViewModel, ticker
+                                    companyViewModel,
+                                    watchListViewModel,
+                                    timeSeriesViewModel,
+                                    ticker
                                 )
                             } else {
                                 Log.e(
@@ -180,7 +182,7 @@ fun StocksApp(
                             val kind =
                                 backStackEntry.arguments?.getBoolean(Destination.TopList.KIND)
                             if (kind != null) {
-                                TopListScreen(stocksViewModel, kind)
+                                TopListScreen(topGainersLoserViewModel, kind)
                             }
                         }
                     }

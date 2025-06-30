@@ -17,7 +17,6 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            val stocksViewModel = ViewModelProvider(this)[StocksViewModel::class.java]
             val searchViewModel = ViewModelProvider(this)[SearchViewModel::class.java]
             val companyViewModel = ViewModelProvider(this)[CompanyViewModel::class.java]
             val timeSeriesViewModel = ViewModelProvider(this)[TimeSeriesViewModel::class.java]
@@ -26,7 +25,6 @@ class MainActivity : ComponentActivity() {
                 ViewModelProvider(this)[TopGainersLoserViewModel::class.java]
             val newsViewModel = ViewModelProvider(this)[NewsViewModel::class.java]
             StocksApp(
-                stocksViewModel,
                 searchViewModel,
                 companyViewModel,
                 timeSeriesViewModel,

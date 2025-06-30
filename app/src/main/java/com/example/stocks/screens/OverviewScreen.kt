@@ -35,12 +35,13 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.stocks.StocksViewModel
 import com.example.stocks.components.BottomSheet
 import com.example.stocks.components.InfoLabel
 import com.example.stocks.components.PillShapedBox
 import com.example.stocks.components.TopNavBar
 import com.example.stocks.formatMarketCap
+import com.example.stocks.models.CompanyViewModel
+import com.example.stocks.models.TimeSeriesViewModel
 import com.example.stocks.models.WatchListViewModel
 import com.example.stocks.ui.theme.backgroundColors
 import com.example.stocks.ui.theme.sansFontFamily
@@ -50,20 +51,21 @@ import com.example.stocks.ui.theme.sansFontFamily
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun OverviewScreen(
-    viewModel: StocksViewModel,
+    companyViewModel: CompanyViewModel,
     watchListViewModel: WatchListViewModel,
+    timeSeriesViewModel: TimeSeriesViewModel,
     ticker: String,
 ) {
-    val companyOverviewData by viewModel.companyOverviewData.collectAsState()
+    val companyOverviewData by companyViewModel.companyOverviewData.collectAsState()
     val watchLists by watchListViewModel.watchLists.collectAsState()
-    val timeSeriesData by viewModel.timeSeriesData.collectAsState()
+    val timeSeriesData by timeSeriesViewModel.timeSeriesData.collectAsState()
 
     val backgroundColor = remember { backgroundColors.random() }
 
     LaunchedEffect(ticker) {
         // Get the company data through ticker name
-        viewModel.getCompanyOverviewData(ticker)
-        viewModel.getIntradayTimeSeries(ticker)
+        companyViewModel.getCompanyOverviewData(ticker)
+        timeSeriesViewModel.getIntradayTimeSeries(ticker)
     }
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = false)
     var showBottomSheet by remember { mutableStateOf(false) }
