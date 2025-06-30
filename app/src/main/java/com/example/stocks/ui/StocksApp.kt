@@ -1,0 +1,194 @@
+package com.example.stocks.ui
+
+import android.util.Log
+import androidx.compose.animation.AnimatedContentTransitionScope
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.staticCompositionLocalOf
+import androidx.compose.ui.Modifier
+import androidx.navigation.NavHostController
+import androidx.navigation.NavType
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.currentBackStackEntryAsState
+import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
+import com.example.stocks.ui.components.BottomNavBar
+import com.example.stocks.viewmodels.CompanyViewModel
+import com.example.stocks.viewmodels.NewsViewModel
+import com.example.stocks.viewmodels.SearchViewModel
+import com.example.stocks.viewmodels.TimeSeriesViewModel
+import com.example.stocks.viewmodels.TopGainersLoserViewModel
+import com.example.stocks.viewmodels.WatchListViewModel
+import com.example.stocks.ui.screens.HomeScreen
+import com.example.stocks.ui.screens.NewsScreen
+import com.example.stocks.ui.screens.OverviewScreen
+import com.example.stocks.ui.screens.TopListScreen
+import com.example.stocks.ui.screens.WatchListScreen
+import com.example.stocks.ui.theme.StocksTheme
+
+
+sealed interface Destination {
+    val route: String
+
+    data object Home : Destination {
+        override val route: String = "home"
+    }
+
+    data object WatchList : Destination {
+        override val route: String = "watch"
+    }
+
+    data object News : Destination {
+        override val route: String = "news"
+    }
+
+    data class Overview(
+        val ticker: String,
+    ) : Destination {
+        override val route: String = "overview/{ticker}"
+
+        companion object {
+            const val TICKER_ARG = "ticker"
+            val arguments = listOf(
+                navArgument(TICKER_ARG) { type = NavType.StringType },
+            )
+        }
+    }
+
+    data class TopList(
+        val kind: Boolean
+    ) : Destination {
+        override val route: String = "toplist/{kind}"
+
+        companion object {
+            const val KIND = "kind"
+            val arguments = listOf(
+                navArgument(KIND) { type = NavType.BoolType })
+        }
+    }
+}
+
+
+val LocalNavController = staticCompositionLocalOf<NavHostController> {
+    error("NavController not provided")
+}
+
+@Composable
+fun StocksApp(
+    searchViewModel: SearchViewModel,
+    companyViewModel: CompanyViewModel,
+    timeSeriesViewModel: TimeSeriesViewModel,
+    watchListViewModel: WatchListViewModel,
+    topGainersLoserViewModel: TopGainersLoserViewModel,
+    newsViewModel: NewsViewModel
+) {
+    val navController = rememberNavController()
+    val navBackStackEntry = navController.currentBackStackEntryAsState().value
+    val currentRoute = navBackStackEntry?.destination?.route
+    val showBottomBar = currentRoute?.startsWith("overview") != true
+
+    CompositionLocalProvider(LocalNavController provides navController) {
+        StocksTheme {
+            Surface(
+                modifier = Modifier.fillMaxSize(),
+                color = MaterialTheme.colorScheme.background
+            ) {
+                Scaffold(
+                    bottomBar = { if (showBottomBar) BottomNavBar() }) { innerPadding ->
+
+                    NavHost(
+                        navController = navController,
+                        startDestination = Destination.Home.route,
+                    ) {
+                        composable(
+                            Destination.Home.route,
+                            exitTransition = {
+                                slideOutOfContainer(
+                                    AnimatedContentTransitionScope.SlideDirection.Left,
+                                )
+                            },
+                        ) {
+                            HomeScreen(topGainersLoserViewModel, searchViewModel)
+                        }
+                        composable(
+                            Destination.WatchList.route,
+                            enterTransition = {
+                                slideIntoContainer(
+                                    AnimatedContentTransitionScope.SlideDirection.Left,
+                                )
+                            },
+                            exitTransition = {
+                                slideOutOfContainer(
+                                    AnimatedContentTransitionScope.SlideDirection.Right,
+                                )
+                            },
+                        ) {
+                            WatchListScreen(watchListViewModel)
+                        }
+                        composable(
+                            Destination.News.route,
+                            enterTransition = {
+                                slideIntoContainer(
+                                    AnimatedContentTransitionScope.SlideDirection.Left,
+                                )
+                            },
+                            exitTransition = {
+                                slideOutOfContainer(
+                                    AnimatedContentTransitionScope.SlideDirection.Right,
+                                )
+                            },
+                        ) {
+                            NewsScreen(newsViewModel)
+                        }
+                        composable(
+                            Destination.Overview("").route,
+                            Destination.Overview.arguments,
+                            enterTransition = {
+                                slideIntoContainer(
+                                    AnimatedContentTransitionScope.SlideDirection.Left,
+                                )
+                            },
+                            exitTransition = {
+                                slideOutOfContainer(
+                                    AnimatedContentTransitionScope.SlideDirection.Right,
+                                )
+                            }
+
+                        ) { backStackEntry ->
+                            val args = backStackEntry.arguments
+                            val ticker = args?.getString(Destination.Overview.TICKER_ARG)
+                            if (ticker != null) {
+                                OverviewScreen(
+                                    companyViewModel,
+                                    watchListViewModel,
+                                    timeSeriesViewModel,
+                                    ticker
+                                )
+                            } else {
+                                Log.e(
+                                    "NavigationError",
+                                    "OverviewScreen received incomplete arguments."
+                                )
+                            }
+                        }
+                        composable(
+                            Destination.TopList(true).route, Destination.TopList.arguments
+                        ) { backStackEntry ->
+                            val kind =
+                                backStackEntry.arguments?.getBoolean(Destination.TopList.KIND)
+                            if (kind != null) {
+                                TopListScreen(topGainersLoserViewModel, kind)
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+

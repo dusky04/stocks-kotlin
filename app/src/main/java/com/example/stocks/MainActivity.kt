@@ -5,12 +5,13 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.lifecycle.ViewModelProvider
-import com.example.stocks.models.CompanyViewModel
-import com.example.stocks.models.NewsViewModel
-import com.example.stocks.models.SearchViewModel
-import com.example.stocks.models.TimeSeriesViewModel
-import com.example.stocks.models.TopGainersLoserViewModel
-import com.example.stocks.models.WatchListViewModel
+import com.example.stocks.ui.StocksApp
+import com.example.stocks.viewmodels.CompanyViewModel
+import com.example.stocks.viewmodels.NewsViewModel
+import com.example.stocks.viewmodels.SearchViewModel
+import com.example.stocks.viewmodels.TimeSeriesViewModel
+import com.example.stocks.viewmodels.TopGainersLoserViewModel
+import com.example.stocks.viewmodels.WatchListViewModel
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {

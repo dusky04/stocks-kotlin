@@ -1,0 +1,46 @@
+package com.example.stocks.data.api
+
+import com.example.stocks.data.model.CompanyOverviewData
+import com.example.stocks.data.model.NewsData
+import com.example.stocks.data.model.TickerSearchData
+import com.example.stocks.data.model.TimeSeriesGraphData
+import com.example.stocks.data.model.TopGainersAndLosersData
+import retrofit2.Response
+import retrofit2.http.GET
+import retrofit2.http.Query
+
+interface StocksAPI {
+    @GET("/query")
+    suspend fun getSearchTickerResults(
+        @Query("function") functionName: String,
+        @Query("keywords") searchValue: String,
+        @Query("apikey") apiKey: String
+    ): Response<TickerSearchData>
+
+    @GET("/query")
+    suspend fun getTopGainersAndLosers(
+        @Query("function") functionName: String,
+        @Query("apikey") apiKey: String
+    ): Response<TopGainersAndLosersData>
+
+    @GET("/query")
+    suspend fun getCompanyOverview(
+        @Query("function") functionName: String,
+        @Query("symbol") companyName: String,
+        @Query("apikey") apiKey: String
+    ): Response<CompanyOverviewData>
+
+    @GET("/query")
+    suspend fun getIntradayTimeSeries(
+        @Query("function") functionName: String,
+        @Query("symbol") symbol: String,
+        @Query("interval") interval: String,
+        @Query("apikey") apiKey: String
+    ): Response<TimeSeriesGraphData>
+
+    @GET("/query")
+    suspend fun getNewsArticles(
+        @Query("function") functionName: String,
+        @Query("apikey") apikey: String
+    ): Response<NewsData>
+}

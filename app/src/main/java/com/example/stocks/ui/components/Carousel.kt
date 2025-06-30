@@ -1,0 +1,62 @@
+package com.example.stocks.ui.components
+
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.material3.ElevatedButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.font.FontWeight
+import com.example.stocks.ui.LocalNavController
+import com.example.stocks.data.model.TopGainerLoser
+import com.example.stocks.ui.theme.sansFontFamily
+
+@Composable
+fun Carousel(sectionTitle: String, itemsList: List<TopGainerLoser>, isGainer: Boolean) {
+    val navController = LocalNavController.current
+    Column(
+        modifier = Modifier
+            .fillMaxWidth(),
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(
+                sectionTitle,
+                fontFamily = sansFontFamily,
+                fontWeight = FontWeight.Bold,
+                style = MaterialTheme.typography.titleLarge
+            )
+            ElevatedButton(onClick = {
+                navController.navigate("toplist/$isGainer")
+            }) {
+                Text("View All", fontFamily = sansFontFamily)
+            }
+        }
+        if (itemsList.isNotEmpty()) {
+            val visibleItems = itemsList.take(6)
+            LazyVerticalGrid(
+                columns = GridCells.Fixed(2),
+            ) {
+                items(visibleItems) { item ->
+                    StockCard(item, isGainer)
+                }
+            }
+        } else {
+            Box(Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
+                Text("Error Loading Content")
+            }
+        }
+    }
+}
