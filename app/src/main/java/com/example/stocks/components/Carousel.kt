@@ -56,7 +56,7 @@ fun Carousel(sectionTitle: String, itemsList: List<TopGainerLoser>, isGainer: Bo
             }
         } else {
             Box(Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
-                CircularProgressIndicator()
+                Text("Error Loading Content")
             }
         }
     }

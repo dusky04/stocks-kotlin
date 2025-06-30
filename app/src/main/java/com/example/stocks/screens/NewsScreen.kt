@@ -19,8 +19,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
+import com.example.stocks.api.NetworkResponse
 import com.example.stocks.components.NewsArticleComponent
 import com.example.stocks.models.NewsViewModel
 import com.example.stocks.ui.theme.sansFontFamily
@@ -35,9 +37,11 @@ fun NewsScreen(newsViewModel: NewsViewModel) {
         newsViewModel.getNewsArticles()
     }
 
-    Column(modifier = Modifier
-        .windowInsetsPadding(WindowInsets.statusBars)
-        .fillMaxSize()) {
+    Column(
+        modifier = Modifier
+            .windowInsetsPadding(WindowInsets.statusBars)
+            .fillMaxSize()
+    ) {
         TopAppBar(
             title = {
                 Text(
@@ -51,18 +55,31 @@ fun NewsScreen(newsViewModel: NewsViewModel) {
                 containerColor = MaterialTheme.colorScheme.surface
             ),
         )
-        if (!newsArticles.feed.isNullOrEmpty()) {
-            LazyColumn {
-                itemsIndexed(newsArticles.feed?.filterNotNull() ?: emptyList()) { idx, feed ->
-                    NewsArticleComponent(feed)
+
+        when (val currentState = newsArticles) {
+            is NetworkResponse.Error -> Box(
+                Modifier.fillMaxSize(),
+                contentAlignment = Alignment.Center
+            ) { Text("Error Loading Data") }
+
+            NetworkResponse.Loading -> Box(
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.Center
+            ) { CircularProgressIndicator() }
+
+            is NetworkResponse.Success -> {
+                val articles = currentState.data.feed
+                if (!articles.isNullOrEmpty()) {
+                    LazyColumn {
+                        itemsIndexed(
+                            articles.filterNotNull()
+                        ) { idx, feed ->
+                            NewsArticleComponent(feed)
+                        }
+                    }
                 }
             }
-        } else {
-            Box(Modifier.fillMaxSize()) {
-                CircularProgressIndicator()
-            }
         }
-
     }
 }
 
