@@ -2,7 +2,7 @@
 
 A simple Android application to track stock prices and manage your portfolio.
 
-Resources (including more sample screenshots as well as a demo video): `[Google Drive Link](https://drive.google.com/drive/folders/1rGy5rNoEKm67GmlsXbRe46K9gUitW09P?usp=sharing)`
+Resources (including more sample screenshots as well as a demo video): [Google Drive Link](https://drive.google.com/drive/folders/1rGy5rNoEKm67GmlsXbRe46K9gUitW09P?usp=sharing)
 
 ## Features
 
