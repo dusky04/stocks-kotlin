@@ -2,6 +2,13 @@
 
 A simple Android application to track stock prices and manage your portfolio.
 
+<img src="screenshots\00_HomeScreenLight.jpg" width="300">
+<img src="screenshots\00_HomeScreenDark.jpg" width="300">
+<img src="screenshots\01_StockOverviewLight.jpg" width="300">
+<img src="screenshots\01_StockOverviewDark.jpg" width="300">
+<img src="screenshots\02_NewsScreenLight.jpg" width="300">
+<img src="screenshots\02_NewsScreenDark.jpg" width="300">
+
 ## Features
 
 - View real-time stock prices.
