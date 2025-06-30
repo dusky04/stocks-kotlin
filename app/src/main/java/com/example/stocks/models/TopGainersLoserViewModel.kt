@@ -24,6 +24,7 @@ class TopGainersLoserViewModel : ViewModel() {
 
     private val _topLosers = MutableStateFlow<List<TopGainerLoser>>(emptyList())
     val topLosers: StateFlow<List<TopGainerLoser>> = _topLosers.asStateFlow()
+
     fun getTopGainersAndLosers() {
         viewModelScope.launch {
             val response =

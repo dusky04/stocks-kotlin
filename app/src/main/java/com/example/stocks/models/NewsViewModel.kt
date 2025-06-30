@@ -18,20 +18,23 @@ class NewsViewModel : ViewModel() {
     val newsArticles: StateFlow<NewsData> = _newsArticles.asStateFlow()
 
     fun getNewsArticles() {
-        viewModelScope.launch {
-            val response = apiInstance.getNewsArticles("NEWS_SENTIMENT", BuildConfig.API_KEY)
-            if (response.isSuccessful) {
-                response.body()?.let { stockData ->
-                    _newsArticles.value = stockData
+        try {
+            viewModelScope.launch {
+                val response = apiInstance.getNewsArticles("NEWS_SENTIMENT", BuildConfig.API_KEY)
+                if (response.isSuccessful) {
+                    response.body()?.let { stockData ->
+                        _newsArticles.value = stockData
+                    }
+                    Log.i(
+                        "RESPONSE TIME SERIES",
+                        "Time series data: ${response.body()?.toString()}"
+                    )
+                } else {
+                    Log.e("ERROR: In getNewsArticles()", response.message())
                 }
-                Log.i(
-                    "RESPONSE TIME SERIES",
-                    "Time series data: ${response.body()?.toString()}"
-                )
-            } else {
-                Log.e("ERROR: In getNewsArticles()", response.message())
             }
+        } catch (e: Exception) {
+            Log.i("Failed Network Request", "")
         }
     }
-
 }

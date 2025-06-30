@@ -24,17 +24,21 @@ class StocksViewModel : ViewModel() {
         MutableStateFlow<TickerSearchData>(TickerSearchData(null))
     val tickerSearchResults: StateFlow<TickerSearchData> = _tickerSearchResults.asStateFlow()
     fun searchTicker(ticker: String) {
-        viewModelScope.launch {
-            val response =
-                apiInstance.getSearchTickerResults("SYMBOL_SEARCH", ticker, BuildConfig.API_KEY)
-            if (response.isSuccessful) {
-                Log.i("SEARCH RESPONSE", response.body().toString())
-                response.body()?.let { data ->
-                    _tickerSearchResults.value = data
+        try {
+            viewModelScope.launch {
+                val response =
+                    apiInstance.getSearchTickerResults("SYMBOL_SEARCH", ticker, BuildConfig.API_KEY)
+                if (response.isSuccessful) {
+                    Log.i("SEARCH RESPONSE", response.body().toString())
+                    response.body()?.let { data ->
+                        _tickerSearchResults.value = data
+                    }
+                } else {
+                    Log.i("ERROR: In searchTicker() ", response.message())
                 }
-            } else {
-                Log.i("ERROR: In searchTicker() ", response.message())
             }
+        } catch (e: Exception) {
+            Log.i("Failed Network Request", "")
         }
     }
 
@@ -49,18 +53,22 @@ class StocksViewModel : ViewModel() {
     private val _topLosers = MutableStateFlow<List<TopGainerLoser>>(emptyList())
     val topLosers: StateFlow<List<TopGainerLoser>> = _topLosers.asStateFlow()
     fun getTopGainersAndLosers() {
-        viewModelScope.launch {
-            val response =
-                apiInstance.getTopGainersAndLosers("TOP_GAINERS_LOSERS", BuildConfig.API_KEY)
-            if (response.isSuccessful) {
-                response.body()?.let { data ->
-                    _topLosersAndGainers.value = data
-                    _topGainers.value = data.topGainers ?: emptyList()
-                    _topLosers.value = data.topLosers ?: emptyList()
+        try {
+            viewModelScope.launch {
+                val response =
+                    apiInstance.getTopGainersAndLosers("TOP_GAINERS_LOSERS", BuildConfig.API_KEY)
+                if (response.isSuccessful) {
+                    response.body()?.let { data ->
+                        _topLosersAndGainers.value = data
+                        _topGainers.value = data.topGainers ?: emptyList()
+                        _topLosers.value = data.topLosers ?: emptyList()
+                    }
+                } else {
+                    Log.i("ERROR: In getTopGainersAndLosers() ", response.message())
                 }
-            } else {
-                Log.i("ERROR: In getTopGainersAndLosers() ", response.message())
             }
+        } catch (e: Exception) {
+            Log.i("Failed Network Request", "")
         }
     }
 
@@ -123,16 +131,20 @@ class StocksViewModel : ViewModel() {
     val companyOverviewData: StateFlow<CompanyOverviewData> = _companyOverviewData.asStateFlow()
     fun getCompanyOverviewData(ticker: String) {
         viewModelScope.launch {
-            val response = apiInstance.getCompanyOverview(
-                "OVERVIEW", ticker, BuildConfig.API_KEY
-            )
-            if (response.isSuccessful) {
-                response.body()?.let { data ->
-                    _companyOverviewData.value = data
+            try {
+                val response = apiInstance.getCompanyOverview(
+                    "OVERVIEW", ticker, BuildConfig.API_KEY
+                )
+                if (response.isSuccessful) {
+                    response.body()?.let { data ->
+                        _companyOverviewData.value = data
+                    }
+                    Log.i("Response: ", response.body().toString())
+                } else {
+                    Log.i("ERROR: In getCompanyOverviewData() ", response.message())
                 }
-                Log.i("Response: ", response.body().toString())
-            } else {
-                Log.i("ERROR: In getCompanyOverviewData() ", response.message())
+            } catch (e: Exception) {
+                Log.i("Failed Network Request", "")
             }
         }
     }
@@ -144,22 +156,26 @@ class StocksViewModel : ViewModel() {
 
     fun getIntradayTimeSeries(ticker: String) {
         viewModelScope.launch {
-            val response = apiInstance.getIntradayTimeSeries(
-                "TIME_SERIES_INTRADAY",
-                ticker,
-                "5min",
-                BuildConfig.API_KEY
-            )
-            if (response.isSuccessful) {
-                response.body()?.let { stockData ->
-                    _timeSeriesGraphData.value = stockData
-                }
-                Log.i(
-                    "RESPONSE TIME SERIES",
-                    "Time series data: ${response.body()?.timeSeries?.keys.toString()}"
+            try {
+                val response = apiInstance.getIntradayTimeSeries(
+                    "TIME_SERIES_INTRADAY",
+                    ticker,
+                    "5min",
+                    BuildConfig.API_KEY
                 )
-            } else {
-                Log.e("ERROR: In getIntradayTimeSeries()", response.message())
+                if (response.isSuccessful) {
+                    response.body()?.let { stockData ->
+                        _timeSeriesGraphData.value = stockData
+                    }
+                    Log.i(
+                        "RESPONSE TIME SERIES",
+                        "Time series data: ${response.body()?.timeSeries?.keys.toString()}"
+                    )
+                } else {
+                    Log.e("ERROR: In getIntradayTimeSeries()", response.message())
+                }
+            } catch (e: Exception) {
+                Log.i("Failed Network Request", "")
             }
         }
 
